@@ -1,0 +1,27 @@
+{
+  "name": "iteration-protocols-workshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmammino/iteration-protocols-workshop.git"
+  },
+  "keywords": [],
+  "author": "Luciano Mammino",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lmammino/iteration-protocols-workshop/issues"
+  },
+  "homepage": "https://github.com/lmammino/iteration-protocols-workshop#readme",
+  "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0"
+  }
+}
