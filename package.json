@@ -1,10 +1,19 @@
 {
   "name": "iteration-protocols-workshop",
   "version": "1.0.0",
-  "description": "",
+  "description": "A workshop about JavaScript iteration protocols: iterator, iterable, async iterator, async iterable",
   "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16.14",
+    "npm": ">=8.3"
+  },
+  "engineStrict": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:lint": "eslint .",
+    "test:unit": "TEST_SOLUTIONS=true tap --no-coverage --jobs=1 --reporter=spec */**/exercises/*.test.js",
+    "test": "npm run test:lint && npm run test:unit",
+    "ex": "tap --no-coverage --jobs=1 --reporter=spec"
   },
   "repository": {
     "type": "git",
@@ -22,6 +31,7 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-promise": "^6.0.0",
+    "tap": "^16.1.0"
   }
 }
