@@ -188,7 +188,110 @@ In this particular case it's interesting to see that the *item* returned in ever
 
 #### `for ... of` with `Object`
 
-... TODO
+What happens if we use `for ... of` on an object? Let's find out:
+
+```js
+// for-of-object.js
+const medallists = {
+  'Teddy Riner': 33,
+  'Driulis Gonzalez Morales': 16,
+  'Ryoko Tani': 16,
+  'Ilias Iliadis': 15
+}
+
+for (const [judoka, medals] of medallists) {
+  console.log(`${judoka} has won ${medals} medals`)
+}
+```
+
+Boom! 💣💥
+
+If we run this code we get the following error:
+
+```plain
+for (const [judoka, medals] of medallists) {
+                               ^
+
+TypeError: medallists is not iterable
+```
+
+And here's our first lesson learned!
+
+> ℹ️ We can use `for ... of` only on iterable objects!
+
+And it turns out that plain objects are not iterable by default.
+
+So, what if we want to iterate over key/value pairs of a plain object?
+
+We can do that with `Object.entries()`:
+
+```js
+// for-of-object-entries.js
+
+const medallists = {
+  'Teddy Riner': 33,
+  'Driulis Gonzalez Morales': 16,
+  'Ryoko Tani': 16,
+  'Ilias Iliadis': 15
+}
+
+for (const [judoka, medals] of Object.entries(medallists)) {
+  console.log(`${judoka} has won ${medals} medals`)
+}
+```
+
+This will work and it will print:
+
+```plain
+Teddy Riner has won 33 medals
+Driulis Gonzalez Morales has won 16 medals
+Ryoko Tani has won 16 medals
+Ilias Iliadis has won 15 medals
+```
+
+The reason why this works is because `Object.entries()` returns an **iterable** object which will produce items with the shape `[key, value]` for every iteration. Similar to what we saw for `Map`.
+
+
+### `for ... in`
+
+You might have heard about `for ... in` as well. Let's see what that does with an array:
+
+```js
+// for-in.js
+
+const judokas = [
+  'Driulis Gonzalez Morales',
+  'Ilias Iliadis',
+  'Tadahiro Nomura',
+  'Anton Geesink',
+  'Teddy Riner',
+  'Ryoko Tani'
+]
+
+for (const judoka in judokas) {
+  console.log(judoka)
+}
+```
+
+Can you already guess what's going to be the output?
+
+<details>
+    <summary>Let's find out!</summary>
+    
+```plain
+0
+1
+2
+3
+4
+5
+```
+
+Not what you might have expected, right?!
+
+</details>
+
+TODO...
 
 
 
