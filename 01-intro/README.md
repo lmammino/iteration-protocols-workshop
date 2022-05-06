@@ -258,7 +258,6 @@ You might have heard about `for ... in` as well. Let's see what that does with a
 
 ```js
 // for-in.js
-
 const judokas = [
   'Driulis Gonzalez Morales',
   'Ilias Iliadis',
@@ -343,9 +342,113 @@ medallists[Ilias Iliadis] = 15
 Check out the [`for ... in` page on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in) if you want to learn more about this statement.
 
 
+### The spread syntax
+
+The spread syntax is another interesting concept that applies to iterable objects.
+
+This syntax is identified by `...iterableObj`: 3 dots and the name of the iterable object.
+
+It allows us to "spread" all the elements of an iterable into an array, or to pass them as individual arguments to a function.
+
+Let's see an example with an array:
+
+```js
+// spread-array.js
+const countdown = [3, 2, 1, 0]
+const from5to0 = [5, 4, ...countdown]
+console.log(from5to0)
+```
+
+This prints:
+
+```plain
+[ 5, 4, 3, 2, 1, 0 ]
+```
+
+As we said, we can also use this syntax to pass the elements of an iterable as distinct arguments to a function call:
+
+```js
+// spread-function.js
+const countdown = [3, 2, 1, 0]
+console.log('countdown data:', ...countdown)
+```
+
+This is equivalent to calling:
+
+```js
+console.log('countdown data:', 3, 2, 1, 0)
+```
+
+and it produces the following output:
+
+```plain
+countdown data: 3 2 1 0
+```
+
+**Note:** `console.log()` accepts an arbitrary number of arguments and it will print all of them separated by a speace.
+
+Let's now see how we can use the spread syntax with objects:
+
+```js
+// spread-object.js
+const judoInfo = {
+  creator: 'Jigoro Kano',
+  creationYear: 1882
+}
+
+const ranks = {
+  belts: ['white', 'yellow', 'orange', 'green', 'blue', 'brown', 'black', 'red-white', 'red'],
+  dan: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+}
+
+const judo = { ...judoInfo, ...ranks }
+
+console.log(judo)
+```
+
+This will output:
+
+```plain
+{
+  creator: 'Jigoro Kano',
+  creationYear: 1882,
+  belts: [
+    'white',  'yellow',
+    'orange', 'green',
+    'blue',   'brown',
+    'black',  'red-white',
+    'red'
+  ],
+  dan: [
+     1,  2, 3, 4,  5,
+     6,  7, 8, 9, 10,
+    11, 12
+  ]
+}
+```
+
+It's a nice way to merge key-value pairs from different objects into one object.
+
+**Note:** The spread syntax with objects has been introduced in EcmaScript 2018, so it's still relatively new and it might not be available in older browsers or Node.js runtimes. If you want to write code that is more broadly compatible you can use `Object.assign()` as an alternative way to merge object key-value pairs.
+
+
 ## Warm up your keyboard
 
-TODO
+Let's try a quick exercise to warm up a little:
+
+> **🏹 Exercise** ([fizzbuzz.js](/01-intro/exercises/fizzbuzz.js))
+>
+> Write a function that implements the fizzBuzz game.
+>
+> A skeleton of the file is available at `01-intro/exercises/fizzbuzz.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 01-intro/exercises/fizzbuzz.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`fizzbuzz.solution.js`](/01-intro/exercises/fizzbuzz.solution.js) for a possible solution.
 
 
 ## Summary
@@ -355,6 +458,8 @@ Let's summarise what we have learned so far:
   - There are many (many many...) ways to do iteration in JavaScript.
   - Iteration protocols try to standardise how to make different types of objects iterable.
   - Iterable objects can be iterated over with `for ... of`.
+  - You can also use the **spread syntax** to "spread" all the elements of an iterable into an array, or to pass them as individual arguments to a function.
+  - The spread syntax can also be used to merge key-value pairs from different objects.
   - `for ... in` also exists and it allows us to iterate over all the enumerable properties of an object.
 
 
