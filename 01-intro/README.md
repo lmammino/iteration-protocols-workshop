@@ -276,7 +276,7 @@ for (const judoka in judokas) {
 Can you already guess what's going to be the output?
 
 <details>
-    <summary>Let's find out!</summary>
+    <summary>🔎  Let's find out!</summary>
     
 ```plain
 0
@@ -291,7 +291,71 @@ Not what you might have expected, right?!
 
 </details>
 
-TODO...
+The way `for ... in` works is that it **iterates over all the enumerable properties of an object**.
+
+In the case of an array the enumerable properties are the array indices.
+
+Let's see what happens with a plain object:
+
+```js
+// for-in-object.js
+const medallists = {
+  'Teddy Riner': 33,
+  'Driulis Gonzalez Morales': 16,
+  'Ryoko Tani': 16,
+  'Ilias Iliadis': 15
+}
+
+for (const judoka in medallists) {
+  console.log(`${judoka} has won ${medallists[judoka]} medals`)
+}
+```
+
+Note how `judoka` will contain the current key, so we need to use `medallist[judoka]` if we want to access the current value for that key.
+
+`for ... in` doesn't really have too many practical use cases.
+
+One case where it could be useful is when you want to debug the properties of an object:
+
+```js
+// for-in-debug.js
+const medallists = {
+  'Teddy Riner': 33,
+  'Driulis Gonzalez Morales': 16,
+  'Ryoko Tani': 16,
+  'Ilias Iliadis': 15
+}
+
+for (const prop in medallists) {
+  console.log(`medallists[${prop}] = ${medallists[prop]}`);
+}
+```
+
+This prints:
+
+```plain
+medallists[Teddy Riner] = 33
+medallists[Driulis Gonzalez Morales] = 16
+medallists[Ryoko Tani] = 16
+medallists[Ilias Iliadis] = 15
+```
+
+Check out the [`for ... in` page on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in) if you want to learn more about this statement.
+
+
+## Warm up your keyboard
+
+TODO
+
+
+## Summary
+
+Let's summarise what we have learned so far:
+
+  - There are many (many many...) ways to do iteration in JavaScript.
+  - Iteration protocols try to standardise how to make different types of objects iterable.
+  - Iterable objects can be iterated over with `for ... of`.
+  - `for ... in` also exists and it allows us to iterate over all the enumerable properties of an object.
 
 
 
