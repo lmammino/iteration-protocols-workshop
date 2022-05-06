@@ -450,6 +450,22 @@ Let's try a quick exercise to warm up a little:
 >
 > If you really struggle with this, you can have a look at [`fizzbuzz.solution.js`](/01-intro/exercises/fizzbuzz.solution.js) for a possible solution.
 
+Was that too easy? Let's try something else:
+
+> **🏹 Exercise** ([champions.js](/01-intro/exercises/champions.js))
+>
+> Let's do some data analysis and let's find the best Judo Olympics champions: athletes who have won at least 3 olympic medals in their career.
+>
+> A skeleton of the file is available at `01-intro/exercises/champions.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 01-intro/exercises/champions.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`champions.solution.js`](/01-intro/exercises/champions.solution.js) for a possible solution.
+
 
 ## Summary
 
