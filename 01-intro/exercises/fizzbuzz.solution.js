@@ -1,3 +1,7 @@
+/**
+ * @param {number} limit
+ * @returns {[(string|number)]}
+ */
 export default function fizzBuzz (limit) {
   const seq = []
   // using a simple for loop because we don't have items to iterate on

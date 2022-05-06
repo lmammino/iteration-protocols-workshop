@@ -30,6 +30,10 @@
   ]
 */
 
+/**
+ * @param {number} limit
+ * @returns {[(string|number)]}
+ */
 export default function fizzBuzz (limit) {
   const seq = []
   // Write your implementation here. Fill `seq` based on limit
