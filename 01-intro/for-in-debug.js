@@ -6,5 +6,5 @@ const medallists = {
 }
 
 for (const prop in medallists) {
-  console.log(`medallists[${prop}] = ${medallists[prop]}`);
+  console.log(`medallists[${prop}] = ${medallists[prop]}`)
 }
