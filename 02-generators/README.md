@@ -225,6 +225,29 @@ and, yes... it will never finish!
 
 ## Exercises
 
+But how to deal with endless iterators and avoid endless loops? One way is to avoid `for ... of` and use `next()` explicitly.
+
+Another approach might be to create another utility function called `take(n, iterable)` that gives us another iterable that will stop when the iterable is completed or when `n` items have been yielded.
+
+Let's implement `take` as an exercise:
+
+> **🏹 Exercise** ([take.js](/02-generators/exercises/take.js))
+>
+> Let's implement the `take(n, iterable)` utility:
+>
+> A skeleton of the file is available at `02-generators/exercises/take.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 02-generators/exercises/take.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`take.solution.js`](/02-generators/exercises/take.solution.js) for a possible solution.
+
+
+## Summary
+
 TODO
 
 
