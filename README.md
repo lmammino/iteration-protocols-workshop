@@ -40,7 +40,7 @@ Enjoy! 🙃
 
 <a href="https://www.nodejsdesignpatterns.com"><img width="240" align="right" src="https://github.com/lmammino/lmammino/blob/master/nodejsdp.jpg?raw=true"></a>
 
-If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/), which also goes into great depth about Streams and related design patterns.
+If you like this piece of work, consider supporting me by getting a copy of [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/), which also goes into great depth about generators, iterator protocols, streams and related design patterns.
 
 If you already have this book, **please consider writing a review** on Amazon, Packt, GoodReads or in any other review channel that you generally use. That would support us greatly 🙏.
 
