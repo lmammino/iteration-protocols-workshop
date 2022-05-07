@@ -69,6 +69,35 @@ This snippet will print:
 
 Can you see now how the generator object can _resume_ its execution when we call `next()`?
 
+A generator can also use the `return` statement to _yield_ one last value and stop the iteration:
+
+```js
+// fruit-generator-return.js
+function * fruitGenerator () {
+  yield '🍑'
+  yield '🍉'
+  yield '🍋'
+  return '🥭'
+}
+
+const fruitGeneratorObj = fruitGenerator()
+console.log(fruitGeneratorObj.next())
+console.log(fruitGeneratorObj.next())
+console.log(fruitGeneratorObj.next())
+console.log(fruitGeneratorObj.next())
+```
+
+The code above outputs:
+
+```plain
+{ value: '🍑', done: false }
+{ value: '🍉', done: false }
+{ value: '🍋', done: false }
+{ value: '🥭', done: true }
+```
+
+Note how the latest value has already `done: true`.
+
 We said that generator objects are also iterable, this means that we can use `for ... of` with them!
 
 So we could rewrite the previous example as follow:
@@ -138,16 +167,60 @@ function * range (start, end) {
 }
 ```
 
-TODO, explain how this works
+The interesting part is that we are effectively abstracting a _classic_ `for` loop and leveraging the resumability of generators to yield a value per every iteration.
 
-TODO, add a challenge: modify this to support an arbitrary step.
+
+> **🎭 PLAY**  
+> Can you modify this `range` function to support an arbitrary step (e.g. increment by 2 rather than by 1)?
 
 
 ## A `cycle` utility
 
-TODO
+Another classic iterator utility available in other languages (hello again, Python 🐍) is the `cycle` utility.
 
-explain that generators are lazy and therefore they can be endless....
+It allows you to pass a sequence of values and it will yield one of these value per every iteration. Once the values are finished it will restart from the beginning. When is this going to finish? Never!
+
+Yes, generators are **lazy**, meaning that they produce (_yield_) values on demand and they can also produce and **endless** sequence of values.
+
+Let's see how we could implement this cycle utility:
+
+```js
+// cycle.js
+function * cycle (values) {
+  let current = 0
+  while (true) {
+    yield values[current % values.length]
+    current += 1
+  }
+}
+```
+
+See that `while (true)`? That should immediately give you the idea that this iterator could go on forever!
+
+So what happens if we use `cycle` with `for ... of`? Let's find out:
+
+```js
+for (const value of cycle(['even', 'odd'])) {
+  console.log(value)
+}
+```
+
+This will print:
+
+```plain
+even
+odd
+even
+odd
+even
+odd
+even
+odd
+even
+...
+```
+
+and, yes... it will never finish!
 
 
 ## Exercises
