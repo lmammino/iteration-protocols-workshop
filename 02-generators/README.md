@@ -245,6 +245,22 @@ Let's implement `take` as an exercise:
 >
 > If you really struggle with this, you can have a look at [`take.solution.js`](/02-generators/exercises/take.solution.js) for a possible solution.
 
+Ok, if you want to push yourself a bit more, let's try another one!
+
+> **🏹 Exercise** ([zip.js](/02-generators/exercises/zip.js))
+>
+> Let's implement the `zip(iterable1, iterable2)` utility:
+>
+> A skeleton of the file is available at `02-generators/exercises/zip.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 02-generators/exercises/zip.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`zip.solution.js`](/02-generators/exercises/zip.solution.js) for a possible solution.
+
 
 ## Summary
 
