@@ -248,7 +248,10 @@ Let's implement `take` as an exercise:
 
 ## Summary
 
-TODO
+- Generator functions are a special type of function.
+- A generator function returns a **generator object** which is both an **iterator** and an **iterable**.
+- A generator function can use `yield` to _yield_ a value a pause it's execution. The execution can be resumed by the caller.
+- Generator functions are a great way to create custom iterable objects.
 
 
 That's all for now, congratulations on finishing the second chapter! 🎉
