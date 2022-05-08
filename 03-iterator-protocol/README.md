@@ -28,6 +28,13 @@ If you want a simple and easy definition, an iterable is a collection, an iterat
 
 In JavaScript, an object is considered **an iterator** if it has a `next()` method. Every time you call it, it returns an object with the keys `done` (boolean) and `value`.
 
+What are the `done` and `value` keys for?
+
+One way we could think about them is that they help answering the following questions:
+
+  - Is there another value left (is it `done` or not)?
+  - If there is a `value`, what it is?
+
 Sounds familiar, right?
 
 > ℹ️  **Note:** this protocol is implicit, in fact, we don't have to explicitly tell JavaScript that the object implements some sort of iterator interface. This is an application of **duck typing** ([_"If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck"_](https://en.wikipedia.org/wiki/Duck_test) 🦆). This means that if an iterator behaves like an iterator than it can be considered an iterator.
@@ -104,7 +111,7 @@ This example is perfectly equivalente to the previous one. The important part is
 
 ## Iterators with generators
 
-Do you remember that we said that a generator object is also an iterator? You do, right?! 😇
+Do you remember that we said that a generator object (an object returned by a generator function) is also an iterator? You do, right?! 😇
 
 Ok... so that means that we could reimplement our countdown example using a generator function!
 
@@ -135,17 +142,28 @@ Now, I hope you are appreciating all the time we spent talking about generators!
 
 ## Exercises
 
-That's all we have to say about iterators and the iterator protocol. Let's exercise a bit 💪.
+That's all we have to know about iterators and the iterator protocol. Let's exercise a bit 💪.
 
-TODO
+> **🏹 Exercise** ([emoji.js](/03-iterator-protocol/exercises/emoji.js))
+>
+> Let's implement an iterator for the emojis in a text.
+>
+> A skeleton of the file is available at `03-iterator-protocol/exercises/emoji.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 03-iterator-protocol/exercises/emoji.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`emoji.solution.js`](/03-iterator-protocol/exercises/emoji.solution.js) for a possible solution.
 
 
 ## Summary
 
-TODO
-
-
-
+ - An **iterator** is an object that allows us to traverse a collection
+ - The **iterator protocol** specifies that an object is an iterator if it has a `next()` method that returns an object with the shape `{done, value}`. `done` (a boolean) tells us if the iteration is completed, `value` represent the value from the current iteration.
+ - You can write iterators as anonymous object (e.g. returned by a factory function), using classes or using generators.
 
 
 That's all for now, congratulations on finishing the third chapter! 🎉

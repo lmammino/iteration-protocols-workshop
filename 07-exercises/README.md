@@ -2,8 +2,14 @@
 
 In this last section you will find some ideas of small projects and exercises that you can build to practice your acquired knowledge of JavaScript iteration protocols.
 
-TODO
-
+TODO: incremental find exercise
+TODO: line iterator
+TODO: enumerate utility
+TODO: map utility
+TODO: filter utility
+TODO: fibonacci
+TODO: batch utility
+TODO: async iterator throttling
 
 
 ## Where to go from here
