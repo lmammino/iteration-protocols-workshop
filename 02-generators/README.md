@@ -174,6 +174,10 @@ The interesting part is that we are effectively abstracting a _classic_ `for` lo
 > Can you modify this `range` function to support an arbitrary step (e.g. increment by 2 rather than by 1)?
 
 
+> **🎭 PLAY**  
+> Can you also modify this `range` function to work with decreasing values (e.g. go from 10 to 0)?
+
+
 ## A `cycle` utility
 
 Another classic iterator utility available in other languages (hello again, Python 🐍) is the `cycle` utility.

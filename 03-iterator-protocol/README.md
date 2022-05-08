@@ -69,7 +69,82 @@ This example will print:
 { done: true }
 ```
 
-TODO from here
+We have basically implemented a countdown from 3 to 0.
+
+Note how `createCountdown` is just a **factory function**, it's not the iterator, but it creates one. In this implementation the iterator is just an **anonymous object**, but if we wanted we could have implemented the iterator using a **class**:
+
+```js
+// countdown-class.js
+class Countdown {
+  constructor (start) {
+    this.nextVal = start
+  }
+
+  next () {
+    if (this.nextVal < 0) {
+      return { done: true }
+    }
+    return {
+      done: false,
+      value: this.nextVal--
+    }
+  }
+}
+
+const countdown = new Countdown(3)
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+```
+
+This example is perfectly equivalente to the previous one. The important part is that our iterator object exposes a `next()` method that comforms with the **iterator protocol**.
+
+
+## Iterators with generators
+
+Do you remember that we said that a generator object is also an iterator? You do, right?! 😇
+
+Ok... so that means that we could reimplement our countdown example using a generator function!
+
+Let's see how that looks like:
+
+```js
+// countdown-generator.js
+function * countdownGen (start) {
+  for (let i = start; i >= 0; i--) {
+    yield i
+  }
+}
+
+const countdown = countdownGen(3)
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+console.log(countdown.next())
+```
+
+If you run this code, you'll see the same result as before.
+
+Note how with generators we don't have to think about keeping track of the state by ourselves (we are not storing `nextVal`). We can simply use a _classic_ `for` loop and rely on the _resumability_ of generators.
+
+Now, I hope you are appreciating all the time we spent talking about generators! Maybe you are also realising that this countdown example isn't that different from our previous `range` example! 😜
+
+
+## Exercises
+
+That's all we have to say about iterators and the iterator protocol. Let's exercise a bit 💪.
+
+TODO
+
+
+## Summary
+
+TODO
+
+
 
 
 
