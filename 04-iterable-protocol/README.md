@@ -127,9 +127,9 @@ This produces the following output:
 > **🎭 PLAY**  
 > What do you think is going to happen if we do this with the factory function implementation? Why don't you try?
 
-Making iterable objects resumable is a design choice that needs to be considered case by case. Sometimes it can make sense (like with out countdown example), sometimes it doesn't. Sometimes it is not even possible.
-
-If you are using third party iterables, make no assumption and check their documentation. Or if you really want to try to make an assumption stay on the safe side and assume that iterables are not resumable.
+> ℹ️  Making iterable objects resumable is a design choice that needs to be considered case by case. Sometimes it can make sense (like with out countdown example), sometimes it doesn't. Sometimes it is not even possible.
+> 
+> If you are using third party iterables, make no assumption and check their documentation. Or if you really want to try to make an assumption stay on the safe side and assume that iterables are not resumable.
 
 Let's now see how to implement our countdown iterable using generator functions:
 
@@ -142,7 +142,7 @@ function * countdownGen (start) {
 }
 ```
 
-Wait, isn't this exactly the same code as per our iterator example from the previous chapter?
+Wait, isn't this exactly the same code as per our iterator example from the previous chapter? 😨
 
 How is it possible that the same code is both an iterator and an iterable?
 
