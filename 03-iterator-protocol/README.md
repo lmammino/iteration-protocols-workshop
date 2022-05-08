@@ -30,7 +30,7 @@ In JavaScript, an object is considered **an iterator** if it has a `next()` meth
 
 Sounds familiar, right?
 
-**Note:** this protocol is implicit, we don't explicitly have to say that the object implements some sort of iterator interface. This is an application of **duck typing** (_"if it quacks is a duck"_ 🦆), which means that if an iterator behaves like an iterator than it can be considered an iterator.
+> ℹ️  **Note:** this protocol is implicit, in fact, we don't have to explicitly tell JavaScript that the object implements some sort of iterator interface. This is an application of **duck typing** ([_"If it looks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck"_](https://en.wikipedia.org/wiki/Duck_test) 🦆). This means that if an iterator behaves like an iterator than it can be considered an iterator.
 
 Ok, let's see an example. Let's say we want to implement a generic _countdown_ utility that gives us all the numbers from a positive `n` to 0:
 
