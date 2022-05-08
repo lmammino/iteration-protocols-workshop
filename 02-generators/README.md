@@ -261,6 +261,9 @@ Ok, if you want to push yourself a bit more, let's try another one!
 >
 > If you really struggle with this, you can have a look at [`zip.solution.js`](/02-generators/exercises/zip.solution.js) for a possible solution.
 
+> **🎭 PLAY**  
+> Did you manage to implement `zip`? Well done you! Now can you implement a more generic version of `zip` that accepts an arbitrary number of iterables as arguments? If you pass N iterables it should create a new iterable that yields an array of N items (1 from every iterable).
+
 
 ## Summary
 
