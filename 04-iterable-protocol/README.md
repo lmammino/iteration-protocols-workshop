@@ -129,7 +129,7 @@ This produces the following output:
 
 > ℹ️  Making iterable objects resumable is a design choice that needs to be considered case by case. Sometimes it can make sense (like with out countdown example), sometimes it doesn't. Sometimes it is not even possible.
 > 
-> If you are using third party iterables, make no assumption and check their documentation. Or if you really want to try to make an assumption stay on the safe side and assume that iterables are not resumable.
+> If you are using third party iterables, make no assumption and check their documentation. Or, if you really want to try to make an assumption, stay on the safe side and assume that the given iterable is not resumable.
 
 Let's now see how to implement our countdown iterable using generator functions:
 
@@ -146,15 +146,86 @@ Wait, isn't this exactly the same code as per our iterator example from the prev
 
 How is it possible that the same code is both an iterator and an iterable?
 
-Let's find out!
+Let's find out! 👇
 
 
 ## Iterator and Iterable together!
 
-TODO: show example of countdown (class) that is both an iterator and an iterable
+I don't know if you realised already, but the iterator and the iterable protocol are not mutually exclusive: we can create objects that implement both!
+
+Let's see a very simple example, an iterator (and iterable) that always yields the string `"hello"`:
+
+```js
+// hello-iterator-iterable.js
+const iterableIterator = {
+  next () {
+    return { done: false, value: 'hello' }
+  },
+  [Symbol.iterator] () {
+    return this
+  }
+}
+```
+
+Ok, `iterableIterator` implements the iterator protocol, in fact it has a `next()` method that always returns `{ done: false, value: 'hello' }`!
+
+But it also has a `Symbol.iterator` method which returns... well itself, an iterator! So it's also an iterable!
+
+If we call `next()` we will get the following result:
+
+```js
+iterableIterator.next()
+// { done: false, value: "hello" }
+```
+
+If we do a `for ... of`, instead:
+
+```js
+for (const value of iterableIterator) {
+  console.log(value)
+}
+
+// hello
+// hello
+// hello
+// ...
+```
+
+This is exactly the kind of objects that generator functions return and that's why we can use `next()` and `for ... of` on them!
+
+Can we make our countdown example an iterator that is also an iterable without using generators? Let's try:
+
+```js
+// countdown-iterator-iterable.js
+class Countdown {
+  constructor (start) {
+    this.nextVal = start
+  }
+
+  // iterator protocol
+  next () {
+    if (this.nextVal < 0) {
+      return { done: true }
+    }
+    return {
+      done: false,
+      value: this.nextVal--
+    }
+  }
+
+  // iterable protocol
+  [Symbol.iterator] () {
+    return this
+  }
+}
+```
+
+Note that this implementation is not _resumable_, so once the iterator is exhausted you cannot reset it, you'll need to create a new `Countdown` object if you want to iterate again.
 
 
 ## Exercises
+
+
 
 TODO: convert exercise from previous chapters to iterable
 
