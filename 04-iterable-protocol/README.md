@@ -149,7 +149,7 @@ How is it possible that the same code is both an iterator and an iterable?
 Let's find out! 👇
 
 
-## Iterator and Iterable together!
+## Iterator and Iterable protocols together! 🤝
 
 I don't know if you realised already, but the iterator and the iterable protocol are not mutually exclusive: we can create objects that implement both!
 
@@ -225,14 +225,34 @@ Note that this implementation is not _resumable_, so once the iterator is exhaus
 
 ## Exercises
 
+Time to put into practice what we learned in this chapter!
 
-
-TODO: convert exercise from previous chapters to iterable
+> **🏹 Exercise** ([emoji.js](/04-iterable-protocol/exercises/emoji.js))
+>
+> Let's re-implement the emoji iterator from the previous chapter but this time let's make iterable.
+>
+> A skeleton of the file is available at `04-iterable-protocol/exercises/emoji.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 04-iterable-protocol/exercises/emoji.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`emoji.solution.js`](/04-iterable-protocol/exercises/emoji.solution.js) for a possible solution.
 
 
 ## Summary
 
-TODO: write summary
+Here's a summary of what we learned in this chapter:
+
+  - The **iterable protocol** defines what's expected for a JavaScript object to be considered **iterable**. That is an object that holds a collection of data on which you can iterate on sequentially.
+  - An object is **iterable** if it implements a **_special_ method called** `Symbol.iterator` which **returns an iterator**.
+  - In other words, an object is an iterable if you can get an iterator from it!
+  - Generator function produces objects that are iterable.
+  - We saw that generators produce objects that are also iterator.
+  - In fact, it is possible to have objects that are both iterator and iterable!
+  - The trick is to create the object as an iterator and the implement a `Symbol.iterator` that returns the object itself (`this`).
 
 That's all for now, congratulations on finishing the fourth chapter! 🎉
 
