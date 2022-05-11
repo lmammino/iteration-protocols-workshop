@@ -117,6 +117,7 @@ Can we use them also for async iterators? YES we can 💪
 Let's see how to rewrite our async countdown iterator using a generator:
 
 ```js
+// countdown-async-iterator-generator.js
 import { setTimeout } from 'timers/promises'
 
 async function * createAsyncCountdown (start, delay = 1000) {
