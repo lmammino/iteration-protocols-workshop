@@ -110,7 +110,43 @@ Now this doesn't look extremely useful, but imagine that you could implement an 
 
 ## Async iterators with generators
 
+We saw how convenient were generator function to create iterator and iterable objects.
+
+Can we use them also for async iterators? YES we can 💪
+
+Let's see how to rewrite our async countdown iterator using a generator:
+
+```js
+import { setTimeout } from 'timers/promises'
+
+async function * createAsyncCountdown (start, delay = 1000) {
+  for (let i = start; i >= 0; i--) {
+    await setTimeout(delay)
+    yield i
+  }
+}
+```
+
+Note how this function is both an `async` function but also a generator... do you see that asterisk?!
+
+This kind of functions have 2 super powers: you can use both `yield` and `await` in their body! 🤯
+
+  - `await` works like with any other async function and it allows you to await for promises to settle before continuing the execution of the code
+  - `yield` works like with any other generator function and it allows to _produce_ a value and suspend the execution untile `next()` is called again on the underlying generator object.
+
+A little spoiler, this function also returns an object that is also an **async iterable**, but we'll talk more about that in the next chapter!
+
+
+## Exercises
+
 TODO: from here
+
+
+## Summary
+
+TODO: do the summary
+
+
 
 That's all for now, congratulations on finishing the fifth chapter! 🎉
 
