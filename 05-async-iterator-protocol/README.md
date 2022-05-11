@@ -49,6 +49,67 @@ We can use this kind of syntax with **async iterables**, but before we get there
 
 An object is an **async iterator** if it has a `next()` method. Every time you call it, it returns **a promise that resolves** to an object with the keys `done` (boolean) and `value`.
 
+This is _quite similar_ to its synchronous counterpart!
+
+The main difference here is that the `next()` method this time returns a `Promise` object!
+
+The promise is used to capture the asynchronicity of the iterator. The returned promise indicates that data is being fetched and that it will eventually be available. Once the promise is settled, the data is available and it is represented exactly as with synchronous iterators: an object with the shape `{ done, value }`.
+
+So, let's see an example for an async iterator. We could stick to our countdown example, except that this time we actually want some time to pass between one item and the next are emitted:
+
+```js
+// countdown-async-iterator.js
+import { setTimeout } from 'timers/promises'
+
+function createAsyncCountdown (from, delay = 1000) {
+  let nextVal = from
+  return {
+    async next () {
+      await setTimeout(delay)
+      if (nextVal < 0) {
+        return { done: true }
+      }
+
+      return { done: false, value: nextVal-- }
+    }
+  }
+}
+```
+
+A few things to note here:
+
+  1. We are importing `setTimeout` from the core `timers/promises` module. This function is a _promisified_ version of the classic `setTimeout`. It allows us to create a promise that resolves after a given delay (specified in milliseconds).
+  2. We define a factory function called `createAsyncCountdown`. This function receives the starting number and the delay between numbers (in milliseconds) as arguments.
+  3. The factory function returns an anonymous object (our async iterator)
+  4. The `next()` function has to return a `Promise` object. Here we are making the function `async` to do that for us! In fact, an async function always returns a promise under the hood. The promise resolves when a `return` statement is reached in the function body (and it resolves exactly to the value that is returned).
+  5. Finally note how are we are _awaiting_ the promise returned by `setTimeout` to wait for a given amount of time before letting our function code continue.
+
+I hope that all of that seems quite clear to you at this point! So now, how do we use this factory function and the async iterator that it returns?
+
+```js
+const countdown = createAsyncCountdown(3)
+console.log(await countdown.next())
+console.log(await countdown.next())
+console.log(await countdown.next())
+console.log(await countdown.next())
+console.log(await countdown.next())
+```
+
+Simply, we just call the `next()` method!
+
+But remember that this time, for every call, we get back a promise, so we need to await that promise before making another call to `next()`!
+
+We can see what will happen in the following image:
+
+![Async Iterator Countdown example running in the terminal](./images/countdown-async-iterator.gif)
+
+Note how it takes roughly 1 second between a print statement and the next!
+
+Now this doesn't look extremely useful, but imagine that you could implement an iterator that every time we call `next()` fetches data from some remote resource!
+
+
+## Async iterators with generators
+
 TODO: from here
 
 That's all for now, congratulations on finishing the fifth chapter! 🎉
