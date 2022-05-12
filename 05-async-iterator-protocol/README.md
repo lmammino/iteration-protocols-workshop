@@ -8,7 +8,13 @@ This is great, but more often than not, JavaScript code tends to be **asynchrono
 
 Can we apply the same principles that we learned to far in **a**synchronous situations?
 
-The classic example is a **paginated dataset**: you need to consume a significant amount of data, so that data is exposed to you in pages. Every page contains a chunk of the whole data and you explicitly need to request the next page to keep going.
+The idea is to implement sequential iteration patterns with data arriving in order over time.
+
+This is a really convenient when you need to complete processing the current “chunk” before you can request the next one (e.g. Traversing paginated datasets or consuming tasks from a remote queue).
+
+Let's talk more about **paginated dataset**.
+
+You need to consume a significant amount of data, so that data is exposed to you in pages. Every page contains a chunk of the whole data and you explicitly need to request the next page to keep going.
 
 Traversing a paginated dataset generally looks like this:
 
@@ -105,6 +111,11 @@ We can see what will happen in the following image:
 
 Note how it takes roughly 1 second between a print statement and the next!
 
+It's also worth mentioning that here we went for a factory function based approach, but we could have used a class as well!
+
+> **🎭 PLAY**  
+> Try to re-implement our async countdown using a class.
+
 Now this doesn't look extremely useful, but imagine that you could implement an iterator that every time we call `next()` fetches data from some remote resource!
 
 
@@ -135,7 +146,7 @@ This kind of functions have 2 super powers: you can use both `yield` and `await`
   - `await` works like with any other async function and it allows you to await for promises to settle before continuing the execution of the code
   - `yield` works like with any other generator function and it allows to _produce_ a value and suspend the execution untile `next()` is called again on the underlying generator object.
 
-A little spoiler, this function also returns an object that is also an **async iterable**, but we'll talk more about that in the next chapter!
+A little spoiler, this function returns an object that is also an **async iterable**, but we'll talk more about that in the next chapter!
 
 
 ## Exercises
