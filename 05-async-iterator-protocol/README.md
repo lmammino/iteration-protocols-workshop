@@ -2,19 +2,19 @@
 
 Everything we have discussed so far is **synchronous**.
 
-This means that we can use the protocols and the techniques that we learned so far to iterate over data that is already available in memory or that it can be _produced_ synchronously.
+This means that we can use the iterator and the iterable protocols and the techniques that we learned so far to iterate over data that is already available in memory or that it can be _produced_ synchronously.
 
-This is great, but more often than not, JavaScript code tends to be **asynchronous**. In fact, often, our code needs to use data from files, network sockets, HTTP servers (APIs), databases, etc.
+This is great, but more often than not, JavaScript code tends to be **asynchronous**. In fact, most of the time, our code needs to use data from files, network sockets, HTTP servers (APIs), databases, etc.
 
-Can we apply the same principles that we learned to far in **a**synchronous situations?
+Can we apply the same principles that we learned so far in **a**synchronous situations?
 
-The idea is to implement sequential iteration patterns with data arriving in order over time.
+What if we could define asynchronous iterators (and iterable objects) to implement sequential iteration patterns with data arriving in order over time?
 
-This is a really convenient when you need to complete processing the current “chunk” before you can request the next one (e.g. Traversing paginated datasets or consuming tasks from a remote queue).
+Great use cases would be traversing paginated datasets or consuming tasks from a remote queue.
 
-Let's talk more about **paginated dataset**.
+But let's focus more on the **paginated dataset** example for now.
 
-You need to consume a significant amount of data, so that data is exposed to you in pages. Every page contains a chunk of the whole data and you explicitly need to request the next page to keep going.
+We need to consume a significant amount of data, so that data is exposed to us in chunks (pages). Every page contains a portion of the whole dataset and we need to explicitly request the next page to keep going.
 
 Traversing a paginated dataset generally looks like this:
 
@@ -57,11 +57,13 @@ An object is an **async iterator** if it has a `next()` method. Every time you c
 
 This is _quite similar_ to its synchronous counterpart!
 
-The main difference here is that the `next()` method this time returns a `Promise` object!
+The main difference here is that the `next()` method this time returns **a `Promise` object**!
 
-The promise is used to capture the asynchronicity of the iterator. The returned promise indicates that data is being fetched and that it will eventually be available. Once the promise is settled, the data is available and it is represented exactly as with synchronous iterators: an object with the shape `{ done, value }`.
+The promise is used to capture the asynchronicity of the iterator. The returned promise indicates that data is being retrieved and that it will eventually be available. Once the promise is settled, the data is available and it is represented exactly as with synchronous iterators: an object with the shape `{ done, value }`.
 
-So, let's see an example for an async iterator. We could stick to our countdown example, except that this time we actually want some time to pass between one item and the next are emitted:
+So, let's see an example for an async iterator.
+
+We could stick with our countdown example, except that this time we actually want some time to pass between one item and the next are emitted:
 
 ```js
 // countdown-async-iterator.js
@@ -82,7 +84,7 @@ function createAsyncCountdown (from, delay = 1000) {
 }
 ```
 
-A few things to note here:
+A few things worth reviewing here:
 
   1. We are importing `setTimeout` from the core `timers/promises` module. This function is a _promisified_ version of the classic `setTimeout`. It allows us to create a promise that resolves after a given delay (specified in milliseconds).
   2. We define a factory function called `createAsyncCountdown`. This function receives the starting number and the delay between numbers (in milliseconds) as arguments.
@@ -90,7 +92,9 @@ A few things to note here:
   4. The `next()` function has to return a `Promise` object. Here we are making the function `async` to do that for us! In fact, an async function always returns a promise under the hood. The promise resolves when a `return` statement is reached in the function body (and it resolves exactly to the value that is returned).
   5. Finally note how are we are _awaiting_ the promise returned by `setTimeout` to wait for a given amount of time before letting our function code continue.
 
-I hope that all of that seems quite clear to you at this point! So now, how do we use this factory function and the async iterator that it returns?
+I hope that all of that seems quite clear to you at this point!
+
+So now, how do we use this factory function and the async iterator that it returns?
 
 ```js
 const countdown = createAsyncCountdown(3)
@@ -103,13 +107,13 @@ console.log(await countdown.next())
 
 Simply, we just call the `next()` method!
 
-But remember that this time, for every call, we get back a promise, so we need to await that promise before making another call to `next()`!
+But remember that this time, for every call, we get back a promise, so we need to `await` that promise before making another call to `next()`!
 
-We can see what will happen in the following image:
+We can see what will happen if we execute the script above with the following image:
 
 ![Async Iterator Countdown example running in the terminal](./images/countdown-async-iterator.gif)
 
-Note how it takes roughly 1 second between a print statement and the next!
+Note how it takes roughly 1 second for an item to become available and be printed!
 
 It's also worth mentioning that here we went for a factory function based approach, but we could have used a class as well!
 
@@ -121,11 +125,13 @@ Now this doesn't look extremely useful, but imagine that you could implement an 
 
 ## Async iterators with generators
 
-We saw how convenient were generator function to create iterator and iterable objects.
+We saw how convenient generator functions are to create iterator and iterable objects.
 
-Can we use them also for async iterators? YES we can 💪
+Can we use them also for async iterators? 
 
-Let's see how to rewrite our async countdown iterator using a generator:
+YES we can! 💪
+
+So, let's see how to rewrite our async countdown iterator using a generator:
 
 ```js
 // countdown-async-iterator-generator.js
@@ -144,7 +150,7 @@ Note how this function is both an `async` function but also a generator... do yo
 This kind of functions have 2 super powers: you can use both `yield` and `await` in their body! 🤯
 
   - `await` works like with any other async function and it allows you to await for promises to settle before continuing the execution of the code
-  - `yield` works like with any other generator function and it allows to _produce_ a value and suspend the execution untile `next()` is called again on the underlying generator object.
+  - `yield` works like with any other generator function and it allows you to _produce_ a value and suspend the execution until `next()` is called again on the underlying generator object.
 
 A little spoiler, this function returns an object that is also an **async iterable**, but we'll talk more about that in the next chapter!
 
