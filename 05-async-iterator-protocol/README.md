@@ -151,13 +151,37 @@ A little spoiler, this function returns an object that is also an **async iterab
 
 ## Exercises
 
-TODO: from here
+Ok, get ready because in this chapter we are going to have some serious piece of exercise... 😏
+
+
+> **🏹 Exercise** ([rickmorty.js](/05-async-iterator-protocol/exercises/rickmorty.js))
+>
+> I hope you like Rick and Morty... because we have to implement an iterator that allows us to go through
+> a paginated API that returns all Rick and Morty characters! Yes, there's [an API](https://rickandmortyapi.com) for that!
+>
+> Let's do this! 💪
+>
+> A skeleton of the file is available at `05-async-iterator-protocol/exercises/rickmorty.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 05-async-iterator-protocol/exercises/rickmorty.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`rickmorty.solution.js`](/05-async-iterator-protocol/exercises/rickmorty.solution.js) for a possible solution.
 
 
 ## Summary
 
-TODO: do the summary
+That's what we learned in this chapter:
 
+  - Async iterators are the asynchronous counterpart of iterators.
+  - They are useful to iterate over data that becomes available asynchronously (e.g. coming from a database or a REST API).
+  - A good example is a paginated API, we could build an async iterator that gives a new page for every iteration.
+  - An object is async iterator if it has a `next()` method which returns a `Promise` that resolves to an object with the shape: `{done, value}`.
+  - The only difference with the iterator protocol is that this time `next()` returns a promise.
+  - When we call next we need make sure we `await` the returned promise.
 
 
 That's all for now, congratulations on finishing the fifth chapter! 🎉
