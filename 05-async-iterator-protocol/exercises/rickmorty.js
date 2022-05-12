@@ -27,7 +27,7 @@
 
   An array with a maximum of 20 character names.
 
-  You can use axios or node-fetch, both are installed!
+  You can use `axios` or `node-fetch`, both are already available in your `node_modules`!
 */
 
 export default function createCharactersPaginator () {
