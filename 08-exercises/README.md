@@ -31,5 +31,5 @@ Thank you! 👋
 
 ---
 
-| [⬅️ 06 - Async Iterable protocol](/06-async-iterable-protocol/) | [🏠](/README.md)| - |
+| [⬅️ 07 - Tips and Pitfalls](/07-tips-and-pitfalls/README.md) | [🏠](/README.md)| - |
 |:--------------|:------:|------------------------------------------------:|

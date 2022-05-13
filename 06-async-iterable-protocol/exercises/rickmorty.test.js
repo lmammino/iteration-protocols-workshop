@@ -24,10 +24,8 @@ tap.test('createCharactersPaginator', async function (t) {
   const iter = createCharactersPaginator()
   const received = []
 
-  let resp = await iter.next()
-  while (!resp.done) {
-    received.push(resp.value)
-    resp = await iter.next()
+  for await (const page of iter) {
+    received.push(page)
   }
 
   t.same(received, expected, 'Results match')

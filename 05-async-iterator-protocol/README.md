@@ -123,7 +123,7 @@ It's also worth mentioning that here we went for a factory function based approa
 Now this doesn't look extremely useful, but imagine that you could implement an iterator that every time we call `next()` fetches data from some remote resource!
 
 
-## Async iterators with generators
+## Async iterators with async generators
 
 We saw how convenient generator functions are to create iterator and iterable objects.
 

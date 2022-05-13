@@ -82,12 +82,13 @@ How convenient is that? 😉
 > Did you realise that our implementation of the async iterable countdown is not resumable? That means that if we use `for await ... of` for a second time on a `countdown` object it simply won't do anything... What could we change to make our implementation resumable?
 
 
-## Async iterables with generators
+## Async iterables with async generators
 
-TODO:
+We already mentioned a few times that we can use **async generators** to create async iterable objects. Let's just do that:
 
 
 ```js
+// countdown-async-iterable-generator.js
 import { setTimeout } from 'timers/promises'
 
 async function * createAsyncCountdown (start, delay = 1000) {
@@ -98,218 +99,70 @@ async function * createAsyncCountdown (start, delay = 1000) {
 }
 ```
 
+It shouldn't come as a big surprise at this point to see that that code is exactly as the one we used in the previous chapter to create our countdown async iterator example!
 
-## Node.js Readable streams are async iterables
+Yes, async generators create objects that are both async iterators and async iterable!
 
-TODO:
-
-```js
-import { createReadStream } from 'fs'
-
-const sourceStream = createReadStream('bigdata.csv')
-
-let bytes = 0
-for await (const chunk of sourceStream) {
-  bytes += chunk.length
-}
-
-console.log(`bigdata.csv: ${bytes} bytes`)
-```
-
-But be careful if you are writing the data somewhere else... You might overload the destination if writing too fast (the infamous backpressure problem).
-
-How do we handle backpressure when consuming streams as async iterables?
+This means that we can use `await ... next()` and `for await ... of`:
 
 ```js
-import { createReadStream } from 'fs'
-import { once } from 'events'
+const countdown = createAsyncCountdown(3)
 
-const sourceStream = createReadStream('bigdata.csv')
-const destStream = new SlowTransform()
+console.log(await countdown.next()) // using it as an async iterator
 
-for await (const chunk of sourceStream) {
-  const canContinue = destStream.write(chunk)
-  if (!canContinue) {
-    // backpressure, now we stop and we need to wait for drain
-    await once(destStream, 'drain')
-    // ok now it's safe to resume writing
-  }
+// using it as an async iterable
+for await (const value of countdown) {
+  console.log(value)
 }
 ```
 
-But if you are dealing with streaming pipelines it's probably easier to use [`pipeline()`](https://nodejs.org/api/stream.html#streampipelinesource-transforms-destination-callback).
+Can you guess what is this going to output?
 
-```js
-import { pipeline } from 'stream/promises'
-import { createReadStream, createWriteStream } from 'fs'
-import { createBrotliCompress } from 'zlib'
+<detail>
+  <summary>👀  You can have a peek if you want!</summary>
 
-const sourceStream = createReadStream('bigdata.csv')
-const compress = createBrotliCompress()
-const destStream = createWriteStream('bigdata.csv.br')
+![The output of our async generator example](./images/countdown-async-iterable-generator.gif)
 
-await pipeline(
-  sourceStream,
-  compress,
-  destStream
-)
-```
+</detail>
 
-> ℹ️  If you want to learn more about Node.js streams, you can check out my [open source workshop about Node.js Streams](https://github.com/lmammino/streams-workshop).
-
-TODO:
-
-
-## Converting Node.js event emitters to Async Iterable
-
-TODO:
-
-```js
-import { on } from 'events'
-import glob from 'glob' // from npm
-
-const matcher = glob('**/*.js')
-
-for await (const [filePath] of on(matcher, 'match')) {
-  console.log(filePath)
-}
-```
-
-TODO:
-
-But be careful because this code will never exit from the loop. The following code might now behave as you might expect:
-
-```js
-import { on } from 'events'
-import glob from 'glob' // from npm
-
-const matcher = glob('**/*.js')
-
-for await (const [filePath] of on(matcher, 'match')) {
-  console.log(filePath)
-}
-
-// ⚠️  DANGER, DANGER (high voltage ⚡️): We'll never get here!
-console.log('ALL DONE! :)')
-```
-
-To handle termination of the loop correctly we would need to have a way to _signal_ that `match` events won't happen anymore.
-
-We could do that as follows:
-
-```js
-import { on } from 'events'
-import glob from 'glob'
-
-const matcher = glob('**/*.js')
-const ac = new global.AbortController()
-
-matcher.once('end', () => ac.abort())
-
-try {
-  for await (const [filePath] of on(matcher, 'match', { signal: ac.signal })) {
-    console.log(`./${filePath}`)
-  }
-} catch (err) {
-  if (!ac.signal.aborted) {
-    console.error(err)
-    process.exit(1)
-  }
-  // we ignore the AbortError
-}
-
-console.log('NOW WE GETTING HERE! :)') // YAY! 😻
-```
-
-NOTE: If you know ahead of time how many events you need to process you can also use a `break` in the `for ... await` loop.
-
-
-## Using async iterators to handle web requests
-
-Can we use async iterators to handle web requests a-la-Deno? 🦕
-
-```js
-import { createServer } from 'http'
-import { on } from 'events'
-
-const server = createServer()
-server.listen(8000)
-
-for await (const [req, res] of on(server, 'request')) {
-  res.end('hello dear friend')
-}
-```
-
-EASY PEASY LEMON SQUEEZY! 🍋
-
-But... wait, aren't we processing all requests in series, now? 😱
-
-```js
-import { createServer } from 'http'
-import { on } from 'events'
-
-const server = createServer()
-server.listen(8000)
-
-for await (const [req, res] of on(server, 'request')) {
-  // ⚠️ ... AS LONG AS WE DON'T USE await HERE, WE ARE FINE!
-}
-```
-
-You don't believe me, right? Ok, let's try this:
-
-```js
-import { createServer } from 'http'
-import { on } from 'events'
-import { setTimeout } from 'timers/promises'
-
-const server = createServer()
-server.listen(8000)
-
-for await (const [req, res] of on(server, 'request')) {
-  await setTimeout(1000)
-  res.end('hello dear friend')
-}
-```
-
-TODO: here show picture with autocannon performance and how we send 1 req/sec
-
-Let's stick to the basics... 😅
-
-```js
-import { createServer } from 'http'
-import { setTimeout } from 'timers/promises'
-
-const server = createServer(async function (req, res) {
-  await setTimeout(1000)
-  res.end('hello dear friend')
-})
-
-server.listen(8000)
-```
-
+> **🎭 PLAY**  
+> Do you think this version of the iterable countdown is resumable? What if we repeat the `for await ... of` a second time? Should anything be printed? If you can't take a guess, why don't you change the code and see for yourself? 😇
 
 
 ## Exercises
 
-TODO:
+I am sure you already guessed what I am going to ask you here as an exercise... 😜
+
+> **🏹 Exercise** ([rickmorty.js](/06-async-iterable-protocol/exercises/rickmorty.js))
+>
+> Let's convert our Rick and Morty paginator from an async iterator to an async iterable!
+>
+> A skeleton of the file is available at `06-async-iterable-protocol/exercises/rickmorty.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 06-async-iterable-protocol/exercises/rickmorty.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`rickmorty.solution.js`](/06-async-iterable-protocol/exercises/rickmorty.solution.js) for a possible solution.
 
 
 ## Summary
 
-TODO:
+Let's review what we learned in this chapter:
 
-Iterable protocols are a way to standardize iteration in JavaScript and Node.js
-Async iterators are ergonomic tools for sequential asynchronous iteration
-But don't use them for everything!
-Consuming data from paginated APIs or reading messages from a queue are good examples!
-Handling web requests or events from an emitter might not be the best use cases!
+  - The async iterable protocol defines what it means for an object to be an async iterable.
+  - Once you have an async iterable you can use the `for await ... of` syntax on it.
+  - An object is an async iterable if it has a special method called `Symbol.asyncIterator` that returns an async iterator.
+  - Async iterables are a great way to abstract paginated data that is available asynchronously or similar operations like pulling jobs from a remote queue.
+  - A small spoiler, async iterables can also be used with Node.js streams...
 
-That's all for now, congratulations on finishing the sixt and last chapter! 🎉
+That's all for now, congratulations on finishing the sixt chapter! 🎉
 
-Take a little break and get ready to do some additional [Exercises](/07-exercises/README.md).
+Give yourself a pat to the back, take a little break and get ready to explore some interesting [Tips and Pitfalls](/07-tips-and-pitfalls/README.md).
 
 ---
 
-| [⬅️ 05 - Async Iterator protocol](/05-async-iterator-protocol/README.md) | [🏠](/README.md)| [07 - Exercises ➡️](/07-exercises/README.md)|
+| [⬅️ 05 - Async Iterator protocol](/05-async-iterator-protocol/README.md) | [🏠](/README.md)| [07 - Tips and Pitfalls ➡️](/07-tips-and-pitfalls/README.md)|
 |:--------------|:------:|------------------------------------------------:|
