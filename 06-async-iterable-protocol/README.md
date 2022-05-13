@@ -24,7 +24,7 @@ The following table summarises the differences between the 2 iterable protocols:
 |             | **Iterable**      | **Async Iterable**     |
 |-------------|-------------------|------------------------|
 | **method**  | `Symbol.iterator` | `Symbol.asyncIterator` |
-| **returns** | iterator          | async iterator         |
+| **returns** | an iterator       | an async iterator      |
 
 Let's take a moment to remember that an iterable is an object that holds or represents a collection. We can iterate over that collection by asking the iterable to give us an iterator. For synchronous iterables we need to call `Symbol.iterator` to get a synchronous iterator, while for asynchronous iterables we need to call `Symbol.asyncIterator` get an async iterator.
 
@@ -74,9 +74,12 @@ The following image illustrates what we should see on our terminal when executin
 
 Can you see that it takes roughly one second for every number to appear?
 
-Also, as with synchronous iterables, `for await ... of` gives us the convenience of not having to deal with `done` and `value`. We just get the value objects straight away inside our loop.
+As with synchronous iterables, `for await ... of` gives us the convenience of not having to deal with `done` and `value`. We just get the value objects straight away inside our loop and the loop will automatically stop when `done` is `true`!
 
 How convenient is that? 😉
+
+> **🎭 PLAY**  
+> Did you realise that our implementation of the async iterable countdown is not resumable? That means that if we use `for await ... of` for a second time on a `countdown` object it simply won't do anything... What could we change to make our implementation resumable?
 
 
 ## Async iterables with generators
