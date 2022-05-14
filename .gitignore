@@ -129,6 +129,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-
 # OS files
 .DS_Store
+
+# Project files
+data.bin
+data.bin.br

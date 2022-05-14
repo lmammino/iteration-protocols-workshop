@@ -82,52 +82,137 @@ Isn't it much nicer that our code reads more sequentially and that we didn't hav
 
 Now let's say that we want to modify our count bytes example a little. This time while we count the bytes we also want to write the data coming from standard input to a file called `data.bin`.
 
-That doesn't seem to hard, so let's have a quick look at a possible implementation:
-
-
-
-But be careful if you are writing the data somewhere else... You might overload the destination if writing too fast (the infamous backpressure problem).
-
-How do we handle backpressure when consuming streams as async iterables?
+That doesn't seem too hard, so let's have a quick look at a possible implementation:
 
 ```js
-import { createReadStream } from 'fs'
+// copy-stdin.js
+import { createWriteStream } from 'fs'
+
+const dest = createWriteStream('data.bin')
+
+let bytes = 0
+for await (const chunk of process.stdin) {
+  dest.write(chunk)
+  bytes += chunk.length
+}
+dest.end()
+
+console.log(`${bytes} written into data.bin`)
+```
+
+We can test this code with our lovely `bigdata.csv`:
+
+```bash
+node 07-tips-and-pitfalls/copy-stdin.js < 07-tips-and-pitfalls/assets/bigdata.csv
+```
+
+If all went according to plan, we should see the following output:
+
+```plain
+332637 written into data.bin
+```
+
+And we should have a new file called `data.bin` which contains a small (and fake) _bigdata_ treasure! 🤑
+
+If we have a second look at the code, the only thing to report is that every time we get a new chunk of data from standard input, we write it down to a file using a Writable file stream. We do that by calling `write()` on the stream object.
+
+If you know anything about Writable streams you should already be thinking about **backpressure**...
+
+Backpressure happens when the data source and the destination work at very different throughputs. If we can read data much faster than we can write, we might end up in trouble. If we are not careful we will accumulate all the data (pending write) in memory and we might just blow the process out of memory.
+
+Can this happen with our current example? Yes it can! Let's imagine we are saving `data.bin` to a very slow disk and that there is a lot of data (more than 2GB) coming through standard input.
+
+So how do we know if we are accumulating too much data in memory and how do we stop the processing until all the writes have been flushed?
+
+If we care to listen, the Writable stream can actually tell us if we are overloading it with too much data too fast!
+
+How does it do that? It's actually simple: every time we call `write()`, the method returns a boolean value. We can interpret that value as answering the question _is it ok to send you more data?_ If the returned value is `true` it's ok to do another call to `write()`. If the value is `false` then the stream is already _under pressure_ and we should stop until further notice.
+
+Ok, so if we see `false` we should stop, but how do we know when it's ok to start writing again?
+
+Again, the writable stream will tell us. But this is an event that will happen at some point in the future, once the stream has flushed all the data pending write and the process has reclaimed all the accumulated memory. So the way that the stream can inform that it is safe to restart writing is through an event, specifically an event called `drain`.
+
+So here's how we should update our script to handle backpressure correctly:
+
+```js
+// copy-stdin-backpressure.js
+import { createWriteStream } from 'fs'
 import { once } from 'events'
 
-const sourceStream = createReadStream('bigdata.csv')
-const destStream = new SlowTransform()
+const dest = createWriteStream('data.bin')
 
-for await (const chunk of sourceStream) {
-  const canContinue = destStream.write(chunk)
+let bytes = 0
+for await (const chunk of process.stdin) {
+  const canContinue = dest.write(chunk)
+  bytes += chunk.length
   if (!canContinue) {
     // backpressure, now we stop and we need to wait for drain
-    await once(destStream, 'drain')
+    await once(dest, 'drain')
     // ok now it's safe to resume writing
   }
 }
+dest.end()
+
+console.log(`${bytes} written into data.bin`)
 ```
 
-But if you are dealing with streaming pipelines it's probably easier to use [`pipeline()`](https://nodejs.org/api/stream.html#streampipelinesource-transforms-destination-callback).
+The main change here is that we capture the return statement from the call to `write()` in a variable called `canContinue`. If we cannot continue we have to _suspend_ the loop until it's safe to continue, that is until the stream emits a `drain` event.
+
+An interesting way to do that in a `for await ... of` loop is to use the [`once`](https://nodejs.org/api/events.html#emitteronceeventname-listener) utility from the core `events` module. `once` returns a promise that will resolve only when the specified event is emitted by the given event emitter. As the name suggests, `once` will listen only once for the event. Then it will detach its internal listener and resolve the `Promise` object that was originally returned.
+
+`once` allows us to simply `await` inside the `for await ... of` loop, which has the effect of _suspending_ the iteration until the `drain` event is emitted.
+
+Now that we know how to use async iterables and handle backpressure, let me tell you that for _complex enough_ pipelines (e.g. when you have more than 2 steps) it's much better (and simpler) to avoid async iterables and use the [`pipeline()`](https://nodejs.org/api/stream.html#streampipelinesource-transforms-destination-callback) function from the `stream/promise` module instead.
+
+Just to illustrate my point, let me show you an example. In the following example we are still counting bytes and savind the data to a file, but this time we also want to compress the data while saving it.
+
+
 
 ```js
+// copy-stdin-compress.js
+import { Transform } from 'stream'
 import { pipeline } from 'stream/promises'
-import { createReadStream, createWriteStream } from 'fs'
+import { createWriteStream } from 'fs'
 import { createBrotliCompress } from 'zlib'
 
-const sourceStream = createReadStream('bigdata.csv')
+class CountBytes extends Transform {
+  // ... omitted for brevity
+}
+
 const compress = createBrotliCompress()
-const destStream = createWriteStream('bigdata.csv.br')
+const beforeCompression = new CountBytes()
+const afterCompression = new CountBytes()
+const destStream = createWriteStream('data.bin.br')
 
 await pipeline(
-  sourceStream,
+  process.stdin,
+  beforeCompression,
   compress,
+  afterCompression,
   destStream
 )
+
+console.log(`Read ${beforeCompression.bytes} bytes and written ${afterCompression.bytes} bytes into "data.bin.br"`)
 ```
 
-> ℹ️  If you want to learn more about Node.js streams, you can check out my [open source workshop about Node.js Streams](https://github.com/lmammino/streams-workshop).
+You can see how pipeline just connects all the different streams together and make the data flow. It will also handle backpressure correctly for us and return a `Promise` object that we can await to continue only when all the data has been consumed.
 
-TODO:
+We can run this example with:
+
+```bash
+node 07-tips-and-pitfalls/copy-stdin-compress.js < 07-tips-and-pitfalls/assets/bigdata.csv
+```
+
+And this should output:
+
+```plain
+Read 332637 bytes and written 79956 bytes into "data.bin.br"
+```
+
+Sweet, Brotli compression seems to work quite well with our awesome bigdata file! 🙂
+
+
+> ℹ️  If streams are confusing you (they can do that at first), you should really check out my [open source workshop about Node.js Streams](https://github.com/lmammino/streams-workshop) and take a deep dive on them.
 
 
 ### Converting Node.js event emitters to Async Iterable
