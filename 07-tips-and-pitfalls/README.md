@@ -217,7 +217,18 @@ Sweet, Brotli compression seems to work quite well with our awesome bigdata file
 
 ### Converting Node.js event emitters to Async Iterable
 
-TODO:
+We can generalise what we have just discussed for Node.js streams to event emitters.
+
+Streams are event emitters after all: every time a new chunk is available the stream abstraction emits a `data` event.
+
+Node.js offers a great utility function to build async iterators on top of any event emitters which might emit the same type of event over time.
+
+This utility is the `on` function from the core module `events`.
+
+To illustrate how `on` works, we can use the example of the `glob` library (from npm). This library allows us to search for all files (and folders) matching a specific pattern. This library will traverse the file system recursively 
+
+TODO: add link fro glob and install it as dependency to the project
+
 
 ```js
 import { on } from 'events'
