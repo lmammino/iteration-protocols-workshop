@@ -221,16 +221,17 @@ We can generalise what we have just discussed for Node.js streams to event emitt
 
 Streams are event emitters after all: every time a new chunk is available the stream abstraction emits a `data` event.
 
-Node.js offers a great utility function to build async iterators on top of any event emitters which might emit the same type of event over time.
+Node.js offers a great utility function to build async iterators on top of any event emitter that might emit the same type of event over time.
 
 This utility is the `on` function from the core module `events`.
 
-To illustrate how `on` works, we can use the example of the `glob` library (from npm). This library allows us to search for all files (and folders) matching a specific pattern. This library will traverse the file system recursively 
+To illustrate how `on` works, we can use the example of the `glob` library (from npm).
 
-TODO: add link fro glob and install it as dependency to the project
+This library allows us to search for all files (and folders) matching a specific pattern. This library will traverse the file system recursively to find matches to our patterns. Every time there is a new match the `matcher` instance will emit a `match` event, which contains the path of the matched file.
 
 
 ```js
+// find-js-files.js
 import { on } from 'events'
 import glob from 'glob' // from npm
 
@@ -241,9 +242,30 @@ for await (const [filePath] of on(matcher, 'match')) {
 }
 ```
 
-TODO:
+If we run this code we should see a lot of files from this project (and the relative `node_modules` folder):
 
-But be careful because this code will never exit from the loop. The following code might now behave as you might expect:
+```plain
+01-intro/for-in-debug.js
+01-intro/for-in-object.js
+01-intro/for-in.js
+01-intro/for-of-map.js
+01-intro/for-of-object-entries.js
+// ...
+node_modules/acorn-jsx/index.js
+node_modules/acorn-jsx/xhtml.js
+node_modules/aggregate-error/index.js
+node_modules/ansi-regex/index.js
+node_modules/ansi-styles/index.js
+// ...
+```
+
+> **🎭 PLAY**  
+> Do you want to know how many JavaScript files do you have in this folder alone? Just run: `node 07-tips-and-pitfalls/find-js-files.js | wc -l` and try not to be shocked by the result! 😅
+
+
+Using `on` and `for await ... of` might look cool and very convenient, but be careful because this code will never exit from the loop.
+
+In fact, the following code might now behave as you might expect:
 
 ```js
 import { on } from 'events'
@@ -264,6 +286,7 @@ To handle termination of the loop correctly we would need to have a way to _sign
 We could do that as follows:
 
 ```js
+// find-js-files-abort.js
 import { on } from 'events'
 import glob from 'glob'
 
@@ -274,7 +297,7 @@ matcher.once('end', () => ac.abort())
 
 try {
   for await (const [filePath] of on(matcher, 'match', { signal: ac.signal })) {
-    console.log(`./${filePath}`)
+    console.log(filePath)
   }
 } catch (err) {
   if (!ac.signal.aborted) {
@@ -284,10 +307,26 @@ try {
   // we ignore the AbortError
 }
 
-console.log('NOW WE GETTING HERE! :)') // YAY! 😻
+console.log('NOW WE ARE GETTING HERE! :)') // YAY! 😻
 ```
 
-NOTE: If you know ahead of time how many events you need to process you can also use a `break` in the `for ... await` loop.
+As you can see, `on` allows us to pass a _signal_ from an `AbortController`. When `on` receives the _abort_ signal from the controller, it just throws an `AbortError` which effectively stops the loop. We need to make sure we have a `try/catch` block and handle the error accordingly. 
+
+If this seems like a lot of work... well, I won't argue, it is a lot of work! So consider this carefully, sometimes you might just better off using event listeners directly:
+
+```js
+// find-js-files-listeners.js
+import glob from 'glob'
+
+const matcher = glob('**/*.js')
+matcher.on('match', console.log)
+matcher.on('end', () => console.log('All completed!'))
+```
+
+Hard truth: `async/await` doesn't always lead to the nicest code! It's up to you to pick the best abstaction and the best coding style for the problem at hand when it comes to JavaScript!
+
+
+> ℹ️ **NOTE**: If you know ahead of time how many events you need to process you can also use a `break` in the `for ... await` loop.
 
 
 ### Using async iterators to handle web requests
