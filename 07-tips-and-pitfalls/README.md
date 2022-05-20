@@ -34,7 +34,7 @@ console.log(fakeIterable, isIterable(fakeIterable)) // true 😡
 
 Note that this works... for the most part! The problem is that we are only checking that an object has a property called `Symbol.asyncIterator` and that the property is a function. We are not really checking that the function is really returning an iterator.
 
-Checking that the returned object is actually a _well implemented_ iterator is not easy. We would need to check that the returned object has a `next()` method and that this method returns a object with the shape `{done, value}`. How can we be sure that **every single time** we call `next()` it conforms to this specification (without actually calling `next()`)? What if suddenly calling `next()` returns `null` or `NaN` or an object with a different shape?
+Checking that the returned object is actually a _well implemented_ iterator is not easy. We would need to check that the returned object has a `next()` method and that this method returns a object with the shape `{done, value}`. How can we be sure that **every single time** we call `next()` it conforms to this specification (without actually calling `next()`)? And what if suddenly calling `next()` returns `null` or `NaN` or an object with a different shape than the one defined by the protocol?
 
 This is not an easy problem to solve, so I recommend to stick with the light check if you need to distinguish between iterable and non iterable objects in your business logic.
 
@@ -409,7 +409,7 @@ So, in Node.js a `server` is not an async iterator, but we know that a `server` 
 
 We know that we can use the `on` utility from the `events` module to create an async iterator from an event emitter (in this case for `server` using the `request` event).
 
-Thi allows us to use a `for await ... of` to handle incoming requests.
+This allows us to use a `for await ... of` to handle incoming requests.
 
 Ok, does this actually work?
 
