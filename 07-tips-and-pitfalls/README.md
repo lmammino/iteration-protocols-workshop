@@ -5,9 +5,48 @@ At this point, you acquired some pretty solid basics when it comes to iterable p
 If you are willing to go a tiny bit deeper, in this chapter we are going to explore some interesting tips and some scary pitfalls (and how to avoid them)!
 
 
-## TODO: check if an object is Iterable or Async Iterable
+## Check if an object is Iterable or Async Iterable
 
-TODO: ...
+We said that iteration protocols are just _protocols_ (touché). So there is no way to really enforce them, so how can we know if an object is iterable?
+
+We can do some light checks to see if the protocol is respected: `typeof obj[Symbol.iterator] === 'function'`
+
+For instance:
+
+```js
+// iterable-check.js
+function isIterable (obj) {
+  return typeof obj[Symbol.iterator] === 'function'
+}
+
+const array = [1, 2, 3]
+console.log(array, isIterable(array)) // true
+
+const genericObj = { foo: 'bar' }
+console.log(genericObj, isIterable(genericObj)) // false
+console.log(Object.entries(genericObj), isIterable(Object.entries(genericObj))) // true
+
+const fakeIterable = {
+  [Symbol.iterator] () { return 'notAnIterator' }
+}
+console.log(fakeIterable, isIterable(fakeIterable)) // true 😡
+```
+
+Note that this works... for the most part! The problem is that we are only checking that an object has a property called `Symbol.asyncIterator` and that the property is a function. We are not really checking that the function is really returning an iterator.
+
+Checking that the returned object is actually a _well implemented_ iterator is not easy. We would need to check that the returned object has a `next()` method and that this method returns a object with the shape `{done, value}`. How can we be sure that **every single time** we call `next()` it conforms to this specification (without actually calling `next()`)? What if suddenly calling `next()` returns `null` or `NaN` or an object with a different shape?
+
+This is not an easy problem to solve, so I recommend to stick with the light check if you need to distinguish between iterable and non iterable objects in your business logic.
+
+If you don't trust that something that looks like an iterable is not implementing the iterable protocol correctly, you'd be better off reading the code of that particular implementation.
+
+Similarly you can check if an object is an **async** iterable with `typeof obj[Symbol.asyncIterator] === 'function'`:
+
+```js
+function isAsyncIterable (obj) {
+  return typeof obj[Symbol.asyncIterator] === 'function'
+}
+```
 
 
 ## Node.js Readable streams are async iterables
@@ -339,16 +378,19 @@ Hard truth: `async/await` doesn't always lead to the nicest code! It's up to you
 If you have ever done any web server with [Deno](https://deno.land) you might have seen something like this:
 
 ```js
-const server = Deno.listen({ port: 8080 });
+// ⚠️ this works only with deno, not with Node.js
+const server = Deno.listen({ port: 8080 })
 
 for await (const conn of server) {
-  // ...handle the connection...
+  // ...handle the request...
 }
 ```
 
 Yes, a `for await ... of` to handle incoming requests. At this point of the workshop, you should know that this means that a `server` is an Async Iterator in Deno.
 
-If that sounds somewhat nice, you might be wondering wether we could do the same with Node.js... Well, hold my drink!
+If that sounds somewhat nice, you might be wondering wether we could do the same with Node.js... 
+
+Well, hold my drink! 🍺
 
 ```js
 // http-for-await.js
@@ -565,7 +607,7 @@ for await (const [req, res] of on(server, 'request')) {
 }
 ```
 
-With this approach we are not awaiting for the promise representing the current request to finish before starting to process the next one, which means we are not processing requests in series anymore!
+With this approach we are not waiting for the promise representing the current request to settle before we start processing the next one, which means we are not processing requests in series anymore! Requests being processed concurrently is exactly what you want in a web server! 😌
 
 > **🎭 PLAY**  
 > What numbers do we expect to see if we benchmark this new implementation? You should try that out by running: `npx autocannon --on-port / -- node 07-tips-and-pitfalls/http-for-await-delay-fixed.js`.
@@ -584,17 +626,19 @@ I'll spare you from exercises in this chapter. But, if you really want to keep c
 
 ## Summary
 
-TODO:
+In this chapter we learned a few interesting tips, tricks and common gotchas! Here's a summary:
 
-Iterable protocols are a way to standardize iteration in JavaScript and Node.js
-Async iterators are ergonomic tools for sequential asynchronous iteration
-But don't use them for everything!
-Consuming data from paginated APIs or reading messages from a queue are good examples!
-Handling web requests or events from an emitter might not be the best use cases!
+  - You can check if an object is an iterable by checking `typeof obj[Symbol.iterator] === 'function'`
+  - Similarly you can check if an object is an **async** iterable with `typeof obj[Symbol.asyncIterator] === 'function'`
+  - In both cases there's no guarantee that the iterable protocol is implemented correctly (the function might not return an iterator 😥)
+  - Node.js Readable streams are also async iterable objects, so you could use `for await ... of` to consume the data in chunks
+  - If you do that and you end up writing data somewhere else, you'll need to handle backpressure yourself. It might be better to use `pipeline()` instead.
+  - You can convert Node.js event emitters to async iterable objects by using the `on` function from the module `events`.
+  - You can use this trick to handle requests to a web server using `for await ... of`, but that's not necessarily a great idea!
 
 That's all for now, congratulations on finishing the sixt and last chapter! 🎉
 
-Take a little break and get ready to explore what you could do next and maybe some more challenging [exercises](/08-exercises/README.md).
+Take a little break and get ready to explore what you could learn next and maybe attempt cracking some more challenging [exercises](/08-exercises/README.md).
 
 ---
 
