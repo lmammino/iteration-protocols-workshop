@@ -1,4 +1,4 @@
-# 07 - Exercises
+# 08 - Exercises
 
 In this last section you will find some ideas of small projects and exercises that you can build to practice your acquired knowledge of JavaScript iteration protocols.
 
@@ -9,7 +9,7 @@ For the following exercises you don't get a testing suite nor a solution, so be 
 Feel free to share your solutions on GitHub and let me know on [Twitter](https://twitter.com/loige).
 
 
-### 07.01 Lines iterator
+### 08.01 Lines iterator
 
 Implement an iterable object that, given a text, will yield a line of that input text for every iteration.
 
@@ -30,7 +30,7 @@ lines.next() // { done: true, value: undefined }
 ```
 
 
-### 07.02 Incremental find
+### 08.02 Incremental find
 
 Create an iterable object that allows you to search an occurence of a certain keyword in a given text. The search should be lazy and give you one occurrence per every iteration. Every occurrence should be represented by the line number and the initial position of the match in that line (column index).
 
@@ -60,14 +60,76 @@ finder.next() // { done: true, value: undefined }
 Can you implement the `find` function to work as described in this example?
 
 
-### 07.03 Enumerate utility 
+### 08.03 Enumerate utility
 
-TODO: enumerate utility
-TODO: map utility
-TODO: filter utility
-TODO: fibonacci
-TODO: batch utility
-TODO: async iterator throttling
+Python, Rust and other languages have an interesting utility when it comes to iterators: the `enumerate` utility.
+
+Let's a Python example to illustrate how `enumerate()` works:
+
+```python
+values = ['a','b','c']
+for count, value in enumerate(values):
+    print(count, value)
+```
+
+This code prints:
+
+```plain
+0 a
+1 b
+2 c
+```
+
+Unfortunately `enumerate` does not exist in JavaScript, but based on what we learned in this workshop we should be able to implement it ourselves, right?
+
+And yes, ideally our implementation of `enumerate` should be lazy: it should take an iterable object as input and produce a new iterable object.
+
+
+### 08.04 Map utility
+
+Python, Rust and other languages also have another interesting utility called `map`. Map allows you to use an arbitraty function to change the values produced by an iterable as you iterate through them.
+
+Let's see a Python example to clarify what we mean:
+
+```python
+def square(number):
+    return number ** 2
+
+numbers = [1, 2, 3, 4]
+squared = map(square, numbers)
+
+for num in squared:
+    print(num)
+```
+
+This will print:
+
+```plain
+1
+4
+9
+16
+```
+
+At a first glance, you might think that this is not too different from [`Array.map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) in JavaScript. The problem is that `Array.map()` only works with arrays and not with generic iterable objects (it's not lazy).
+
+We want to implement something more generic that works with iterables: it takes an iterable object and produces a new iterable object, like in Python!
+
+
+### 08.05 Async map
+
+Can we implement the same `map()` utility as in the previous exercise, but this time make it work with **async iterable** objects like Readable streams?
+
+
+
+TODO: complete description with an example
+
+
+
+
+TODO: async iterator throttling exercise
+
+TODO: re-implement `on` from `events`
 
 
 ## Where to go from here
