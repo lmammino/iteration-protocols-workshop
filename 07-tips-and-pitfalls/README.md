@@ -331,9 +331,22 @@ Hard truth: `async/await` doesn't always lead to the nicest code! It's up to you
 
 ### Using async iterators to handle web requests
 
-Can we use async iterators to handle web requests a-la-Deno? 🦕
+If you have ever done any web server with [Deno](https://deno.land) you might have seen something like this:
 
 ```js
+const server = Deno.listen({ port: 8080 });
+
+for await (const conn of server) {
+  // ...handle the connection...
+}
+```
+
+Yes, a `for await ... of` to handle incoming requests. At this point of the workshop, you should know that this means that a `server` is an Async Iterator in Deno.
+
+If that sounds somewhat nice, you might be wondering wether we could do the same with Node.js... Well, hold my drink!
+
+```js
+// http-fow-await.js
 import { createServer } from 'http'
 import { on } from 'events'
 
@@ -345,9 +358,53 @@ for await (const [req, res] of on(server, 'request')) {
 }
 ```
 
-EASY PEASY LEMON SQUEEZY! 🍋
+So, in Node.js a `server` is not an async iterator, but we know that a `server` emits a `request` every time there is an incoming request.
+
+We know that we can use the `on` utility from the `events` module to create an async iterator from an event emitter (in this case for `server` using the `request` event).
+
+Thi allows us to use a `for await ... of` to handle incoming requests.
+
+Ok, does this actually work?
+
+To try that out we just need to run:
+
+```bash
+node 07-tips-and-pitfalls/http-fow-await.js
+```
+
+And then (in another terminal):
+
+```bash
+curl -v http://localhost:8000
+```
+
+And, if all went well, we should see something like this:
+
+```plain
+*   Trying 127.0.0.1:8000...
+* Connected to localhost (127.0.0.1) port 8000 (#0)
+> GET / HTTP/1.1
+> Host: localhost:8000
+> User-Agent: curl/7.79.1
+> Accept: */*
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Date: Fri, 20 May 2022 10:47:12 GMT
+< Connection: keep-alive
+< Keep-Alive: timeout=5
+< Content-Length: 17
+<
+* Connection #0 to host localhost left intact
+hello dear friend
+```
+
+So, this seems to work as expected! 💪
+
 
 But... wait, aren't we processing all requests in series, now? 😱
+
+TODO: from here
 
 ```js
 import { createServer } from 'http'
