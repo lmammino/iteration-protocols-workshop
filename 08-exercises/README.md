@@ -120,16 +120,34 @@ We want to implement something more generic that works with iterables: it takes 
 
 Can we implement the same `map()` utility as in the previous exercise, but this time make it work with **async iterable** objects like Readable streams?
 
+We want something that could allow us to do this:
+
+```js
+import { createReadStream } from 'fs'
+
+const asyncMap = async function * (stream, transform) {
+  // TODO
+}
+
+const textStream = createReadStream('some-file.txt')
+const uppercasifiedStream = asyncMap(textStream, (chunk) => chunk.toString().toUpperCase())
+
+for await (const chunk of uppercasifiedStream) {
+  console.log(chunk)
+}
+```
+
+Can you complete the implementation of `asyncMap`?
 
 
-TODO: complete description with an example
+### 08.06 Async throttling
+
+TODO: ...
 
 
+### 08.07 Re-implement `on` from `events`
 
-
-TODO: async iterator throttling exercise
-
-TODO: re-implement `on` from `events`
+TODO: ...
 
 
 ## Where to go from here
