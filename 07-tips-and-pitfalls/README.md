@@ -5,6 +5,11 @@ At this point, you acquired some pretty solid basics when it comes to iterable p
 If you are willing to go a tiny bit deeper, in this chapter we are going to explore some interesting tips and some scary pitfalls (and how to avoid them)!
 
 
+## TODO: check if an object is Iterable or Async Iterable
+
+TODO: ...
+
+
 ## Node.js Readable streams are async iterables
 
 I don't know if you know about Node.js streams... Well, if you don't I strongly suggest you look into them because they are awesome! Did I already tell you I have [a workshop like this one entirely dedicated to Node.js streams](https://github.com/lmammino/streams-workshop)? 😇
@@ -346,7 +351,7 @@ Yes, a `for await ... of` to handle incoming requests. At this point of the work
 If that sounds somewhat nice, you might be wondering wether we could do the same with Node.js... Well, hold my drink!
 
 ```js
-// http-fow-await.js
+// http-for-await.js
 import { createServer } from 'http'
 import { on } from 'events'
 
@@ -369,7 +374,7 @@ Ok, does this actually work?
 To try that out we just need to run:
 
 ```bash
-node 07-tips-and-pitfalls/http-fow-await.js
+node 07-tips-and-pitfalls/http-for-await.js
 ```
 
 And then (in another terminal):
@@ -402,9 +407,132 @@ hello dear friend
 So, this seems to work as expected! 💪
 
 
-But... wait, aren't we processing all requests in series, now? 😱
+But... wait, aren't we processing all requests in series, now? 🤔
 
-TODO: from here
+If we are actually doing that we are basically killing the performance of our server because we are only serving 1 request at the time! 😱
+
+That's scary, so let's do something to test our web server.
+
+One easy thing we can do is to add an artificial delay of 1 second before we send back our response to the user.
+
+If we are processing request in series that means we won't be able to serve more than 1 request per second, so once we do that we can use [`autocannon`](https://github.com/mcollina/autocannon) to verify our server throughput and draw some conclusions:
+
+```js
+// http-for-await-delay.js
+import { createServer } from 'http'
+import { on } from 'events'
+import { setTimeout } from 'timers/promises'
+
+const server = createServer()
+server.listen(8000)
+
+for await (const [req, res] of on(server, 'request')) {
+  await setTimeout(1000)
+  res.end('hello dear friend')
+}
+```
+
+Nothing too crazy here, so let's benchmark this implementation with:
+
+```bash
+npx autocannon --on-port /  -- node 07-tips-and-pitfalls/http-for-await-delay.js
+```
+
+This command launches our server application and once it's up and running it starts to fire requests at it.
+
+By default `autocannon` creates 10 different clients trying to send as many requests as possible within 10 seconds.
+
+Once this is done we should see a table like this:
+
+```plain
+Running 10s test @ http://localhost:8000/
+10 connections
+
+
+┌─────────┬─────────┬─────────┬─────────┬─────────┬────────────┬────────────┬─────────┐
+│ Stat    │ 2.5%    │ 50%     │ 97.5%   │ 99%     │ Avg        │ Stdev      │ Max     │
+├─────────┼─────────┼─────────┼─────────┼─────────┼────────────┼────────────┼─────────┤
+│ Latency │ 1044 ms │ 5045 ms │ 9057 ms │ 9057 ms │ 5046.78 ms │ 2586.69 ms │ 9057 ms │
+└─────────┴─────────┴─────────┴─────────┴─────────┴────────────┴────────────┴─────────┘
+┌───────────┬─────┬──────┬───────┬───────┬───────┬───────┬───────┐
+│ Stat      │ 1%  │ 2.5% │ 50%   │ 97.5% │ Avg   │ Stdev │ Min   │
+├───────────┼─────┼──────┼───────┼───────┼───────┼───────┼───────┤
+│ Req/Sec   │ 0   │ 0    │ 1     │ 1     │ 0.9   │ 0.3   │ 1     │
+├───────────┼─────┼──────┼───────┼───────┼───────┼───────┼───────┤
+│ Bytes/Sec │ 0 B │ 0 B  │ 140 B │ 140 B │ 126 B │ 42 B  │ 140 B │
+└───────────┴─────┴──────┴───────┴───────┴───────┴───────┴───────┘
+
+Req/Bytes counts sampled once per second.
+# of samples: 10
+
+20 requests in 10.06s, 1.26 kB read
+1 errors (1 timeouts)
+```
+
+We are processing an average of 1 req/sec... YES THIS IS BAD! 🙈
+
+Just for the sake of comparison, let's see a more traditional implementation of a web server and how it performs against the same benchmark:
+
+```js
+// http-delay-traditional.js
+import { createServer } from 'http'
+import { setTimeout } from 'timers/promises'
+
+const server = createServer(async function (req, res) {
+  await setTimeout(1000)
+  res.end('hello dear friend')
+})
+
+server.listen(8000)
+```
+
+No `for await ... of` here, we just pass a good hold handler function to `createServer`. Let's run the benchmarks:
+
+```bash
+npx autocannon --on-port / -- node 07-tips-and-pitfalls/http-delay-traditional.js
+```
+
+This benchmark should print something similar to this:
+
+```plain
+Running 10s test @ http://localhost:8000/
+10 connections
+
+
+┌─────────┬─────────┬─────────┬─────────┬─────────┬────────────┬──────────┬─────────┐
+│ Stat    │ 2.5%    │ 50%     │ 97.5%   │ 99%     │ Avg        │ Stdev    │ Max     │
+├─────────┼─────────┼─────────┼─────────┼─────────┼────────────┼──────────┼─────────┤
+│ Latency │ 1009 ms │ 1018 ms │ 1056 ms │ 1059 ms │ 1026.42 ms │ 14.38 ms │ 1059 ms │
+└─────────┴─────────┴─────────┴─────────┴─────────┴────────────┴──────────┴─────────┘
+┌───────────┬─────┬──────┬────────┬────────┬─────────┬───────┬────────┐
+│ Stat      │ 1%  │ 2.5% │ 50%    │ 97.5%  │ Avg     │ Stdev │ Min    │
+├───────────┼─────┼──────┼────────┼────────┼─────────┼───────┼────────┤
+│ Req/Sec   │ 0   │ 0    │ 10     │ 10     │ 9       │ 3     │ 10     │
+├───────────┼─────┼──────┼────────┼────────┼─────────┼───────┼────────┤
+│ Bytes/Sec │ 0 B │ 0 B  │ 1.4 kB │ 1.4 kB │ 1.26 kB │ 420 B │ 1.4 kB │
+└───────────┴─────┴──────┴────────┴────────┴─────────┴───────┴────────┘
+
+Req/Bytes counts sampled once per second.
+# of samples: 10
+
+100 requests in 10.06s, 12.6 kB read
+```
+
+We can see here that we have a much better situation now.
+
+We have 10 clients and we are artificially forcing every request to take 1 second. The maximum number of requests we could achieve in this scenario is 10 req/sec.
+Here we are very close to that amount in average!
+
+> **🎭 PLAY**  
+> If you want to see what happens with more clients, you can run `autocannon` with the option `-c X` (where X is the number of clients). 
+> Why don't you try to run the benchmarks for both implementation with many clients. Do you see any interesting pattern?
+
+Does this mean that we cannot use this `for await ... of` approach for web servers?
+
+Well not really...
+
+The trick is not to use `await` inside the loop:
+
 
 ```js
 import { createServer } from 'http'
@@ -418,9 +546,10 @@ for await (const [req, res] of on(server, 'request')) {
 }
 ```
 
-You don't believe me, right? Ok, let's try this:
+If you really want to do something `async` in the handling logic, you could call another async function from within the loop and pass `req` and `res` or you can do something like this:
 
 ```js
+// http-for-await-delay-fixed.js
 import { createServer } from 'http'
 import { on } from 'events'
 import { setTimeout } from 'timers/promises'
@@ -429,26 +558,29 @@ const server = createServer()
 server.listen(8000)
 
 for await (const [req, res] of on(server, 'request')) {
-  await setTimeout(1000)
-  res.end('hello dear friend')
+  (async function () {
+    await setTimeout(1000)
+    res.end('hello dear friend')
+  })()
 }
 ```
 
-TODO: here show picture with autocannon performance and how we send 1 req/sec
+With this approach we are not awaiting for the promise representing the current request to finish before starting to process the next one, which means we are not processing requests in series anymore!
 
-Let's stick to the basics... 😅
+> **🎭 PLAY**  
+> What numbers do we expect to see if we benchmark this new implementation? You should try that out by running: `npx autocannon --on-port / -- node 07-tips-and-pitfalls/http-for-await-delay-fixed.js`.
 
-```js
-import { createServer } from 'http'
-import { setTimeout } from 'timers/promises'
+Ok, problem solved! 🍻
 
-const server = createServer(async function (req, res) {
-  await setTimeout(1000)
-  res.end('hello dear friend')
-})
+But... if you want my 2 cents, this is not necessaraly pretty and we have seen that it can be quite dangerous: a careless handling of `async` can easily destroy the performance of you server, so it's probably better to stick with handler functions when it comes to web servers!
 
-server.listen(8000)
-```
+**Let's not be tempted by the patterns of the dinosaur!** 🦕  (Sorry, Deno... 😇)
+
+
+## Exercises
+
+I'll spare you from exercises in this chapter. But, if you really want to keep coding, check out some suggestions in the [next and final chapter](/08-exercises/README.md)!
+
 
 ## Summary
 
