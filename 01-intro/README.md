@@ -217,7 +217,7 @@ TypeError: medallists is not iterable
 
 And here's our first lesson learned!
 
-> ℹ️ We can use `for ... of` only on iterable objects!
+> **Note**: We can use `for ... of` only on iterable objects!
 
 And it turns out that plain objects are not iterable by default.
 

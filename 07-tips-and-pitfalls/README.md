@@ -119,7 +119,7 @@ So it works! 🎉
 
 Isn't it much nicer that our code reads more sequentially and that we didn't have to worry about remembering and wiring very specific events? We just wanted a simple and convenient way to _loop over_ the chunks as they became available and that's what we get with `for await ... of`.
 
-> ℹ️  Note that you can use `for await ... of` even with Transform streams. This is because transform streams have a both a Writable and a Readable part. When we try to use a Transform stream as an async iterable we are effectively reading data from the Readable part of the Transform stream.
+> **Note**: you can use `for await ... of` even with Transform streams. This is because transform streams have a both a Writable and a Readable part. When we try to use a Transform stream as an async iterable we are effectively reading data from the Readable part of the Transform stream.
 
 
 ## Streaming pipelines and handling backpressure
@@ -256,7 +256,7 @@ Read 332637 bytes and written 79956 bytes into "data.bin.br"
 Sweet, Brotli compression seems to work quite well with our awesome bigdata file! 🙂
 
 
-> ℹ️  If streams are confusing you (they can do that at first), you should really check out my [open source workshop about Node.js Streams](https://github.com/lmammino/streams-workshop) and take a deep dive on them.
+> **Note**: If streams are confusing you (yes, they can do that at first), you should really check out my [open source workshop about Node.js Streams](https://github.com/lmammino/streams-workshop) and take a deep dive on them.
 
 
 ### Converting Node.js event emitters to Async Iterable
@@ -370,7 +370,7 @@ matcher.on('end', () => console.log('All completed!'))
 Hard truth: `async/await` doesn't always lead to the nicest code! It's up to you to pick the best abstaction and the best coding style for the problem at hand when it comes to JavaScript!
 
 
-> ℹ️ **NOTE**: If you know ahead of time how many events you need to process you can also use a `break` in the `for ... await` loop.
+> **Note**: If you know ahead of time how many events you need to process you can also use a `break` in the `for ... await` loop.
 
 
 ### Using async iterators to handle web requests

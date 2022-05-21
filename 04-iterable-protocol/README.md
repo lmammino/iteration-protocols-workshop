@@ -127,7 +127,7 @@ This produces the following output:
 > **🎭 PLAY**  
 > What do you think is going to happen if we do this with the factory function implementation? Why don't you try?
 
-> ℹ️  Making iterable objects resumable is a design choice that needs to be considered case by case. Sometimes it can make sense (like with out countdown example), sometimes it doesn't. Sometimes it is not even possible.
+> **Note**: Making iterable objects resumable is a design choice that needs to be considered case by case. Sometimes it can make sense (like with out countdown example), sometimes it doesn't. Sometimes it is not even possible.
 > 
 > If you are using third party iterables, make no assumption and check their documentation. Or, if you really want to try to make an assumption, stay on the safe side and assume that the given iterable is not resumable.
 
