@@ -118,11 +118,11 @@ for await (const value of countdown) {
 
 Can you guess what is this going to output?
 
-<detail> <summary> 👀  You can have a peek if you want!</summary>
+<details> <summary> 👀  You can have a peek if you want!</summary>
 
 ![The output of our async generator example](./images/countdown-async-iterable-generator.gif)
 
-</detail>
+</details>
 
 > **🎭 PLAY**  
 > Do you think this version of the iterable countdown is resumable? What if we repeat the `for await ... of` a second time? Should anything be printed? If you can't take a guess, why don't you change the code and see for yourself? 😇
