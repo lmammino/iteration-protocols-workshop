@@ -140,14 +140,40 @@ for await (const chunk of uppercasifiedStream) {
 Can you complete the implementation of `asyncMap`?
 
 
-### 08.06 Async throttling
+### 08.06 Re-implement `on` from `events`
 
-TODO: ...
+We have already discussed how `on` from the core module `events` work. Would you be able to re-implement it from scratch by yourself?
+
+If you really have no clue, you could always have a peek at [the official implementation](https://github.com/nodejs/node/blob/bd86e5186a33803aa9283b9a4c6946da33b67511/lib/events.js#L1012-L1137), or run the following snippet in a Node.js shell:
+
+```js
+const { on } = require('events')
+console.log(on.toString())
+```
+
+Well, if you think that's a lot of code, try to implement a simplified version that doesn't care about error handling or abort signals.
 
 
-### 08.07 Re-implement `on` from `events`
+### 08.07 Events debounce
 
-TODO: ...
+Let's say you want to listen to events, but if they happen too often you should ignore them. This is called **debouncing** and it something common in the frontend world, but it might also be useful on the backend. For instance, let's say that we have a `sensor` object emitting readings frequently (once every 100ms) and that we only want to log them at most once per second:
+
+```js
+import { EventEmitter } from 'events'
+
+const sensor = new EventEmitter()
+setInterval(() => sensor.emit('reading', Math.random()), 100)
+
+async function * debounce (sensor, event = 'reading', everyMs = 1000) {
+  // TODO ...
+}
+
+for await (const reading of debounce(sensor)) {
+  console.log(reading)
+}
+```
+
+Can you complete the implementation of `debounce`?
 
 
 ## Where to go from here
@@ -158,7 +184,7 @@ If you want to keep learning about JavaScript, Node.js and iteration protocols, 
 
  - [Node.js Design Patterns, Third Edition](https://www.nodejsdesignpatterns.com/): has an entire section dedicated to iteration protocols and related design patterns (disclaimer: I co-authored this book!)
  - [JavaScript Async Iterator](https://www.nodejsdesignpatterns.com/blog/javascript-async-iterators/): An article that recaps most of the topics discussed in this workshop.
- - Learn [how I found a lost song using JavaScript and Async Iterators](https://youtu.be/uTzBHPpMEhA) (talk from No). You can also look at [the slides](https://loige.link/nodeconf-iter).
+ - Learn [how I found a lost song using JavaScript and Async Iterators](https://youtu.be/uTzBHPpMEhA) (talk from NodeConfRemote 2021). You can also look at [the slides](https://loige.link/nodeconf-iter).
  - [Official (sync) Iteration protocols documentation on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols): the goto place to make sure you didn't miss anything important about iteration protocols or just to quickly review something you don't remember.
  - [Official documentation about Async iterators and iterable on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol/asyncIterator): Similar to the above but covers some details about the async counterparts of the iterator and iterable protocols.
  - [Official documentation about `for await ... of` on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of): Gives you some more details about this syntax and when you can use it.
