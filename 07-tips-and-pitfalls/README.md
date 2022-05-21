@@ -378,13 +378,14 @@ Hard truth: `async/await` doesn't always lead to the nicest code! It's up to you
 If you have ever done any web server with [Deno](https://deno.land) you might have seen something like this:
 
 ```js
-// ⚠️ this works only with deno, not with Node.js
 const server = Deno.listen({ port: 8080 })
 
 for await (const conn of server) {
-  // ...handle the request...
+  // ...handle the connection...
 }
 ```
+
+> **Warning**: the code above works only with Deno, not with Node.js
 
 Yes, a `for await ... of` to handle incoming requests. At this point of the workshop, you should know that this means that a `server` is an Async Iterator in Deno.
 
