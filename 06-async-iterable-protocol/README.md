@@ -118,8 +118,7 @@ for await (const value of countdown) {
 
 Can you guess what is this going to output?
 
-<detail>
-  <summary>👀  You can have a peek if you want!</summary>
+<detail> <summary> 👀  You can have a peek if you want!</summary>
 
 ![The output of our async generator example](./images/countdown-async-iterable-generator.gif)
 
