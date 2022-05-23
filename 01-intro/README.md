@@ -442,7 +442,7 @@ Let's try a quick exercise to warm up a little:
 >
 > A skeleton of the file is available at `01-intro/exercises/fizzbuzz.js`.
 >
-> You can edit the file and run an interactive test session to validate your implementation with:
+> You can edit the file and run an interactive test session to validate your implementation with (from the root folder of the project):
 >
 > ```bash
 > npm run ex -- 01-intro/exercises/fizzbuzz.test.js
