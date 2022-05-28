@@ -3,7 +3,7 @@ import axios from 'axios'
 export default function createCharactersPaginator () {
   let nextPage = 'https://rickandmortyapi.com/api/character'
   return {
-    [Symbol.asyncIterator]() { return this; },
+    [Symbol.asyncIterator] () { return this },
     async next () {
       if (nextPage === null) {
         return { done: true, value: undefined }
