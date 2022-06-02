@@ -2,13 +2,13 @@
 
 Before continuing let's try to distinguish between **iterator** and **iterable**. Those two concepts have very similar names and sometimes they are used interchangeably.
 
-In JavaScript is important to understand the difference to appreacite the iteration protocols we are about to discuss.
+In JavaScript is important to understand the difference to appreciate the iteration protocols we are about to discuss.
 
 ## Iterator
 
 ![Iterator](./images/iterator.png)
 
-An **iterator** is an object that acts like a cursoe to iterate over blocks of data sequentially.
+An **iterator** is an object that acts like a cursor to iterate over blocks of data sequentially.
 
 The iterator itself doesn't know much about the collection, it just knows how to move to the next element.
 
@@ -172,5 +172,6 @@ Take a little break and get ready to move to the [Next section](/04-iterable-pro
 
 ---
 
-|[⬅️ 02 - Generators](/02-generators/README.md) | [🏠](/README.md)| [04 - Iterable protocol ➡️](/04-iterable-protocol/README.md)|
+
+| [⬅️ 02 - Generators](/02-generators/README.md) | [🏠](/README.md)| [04 - Iterable protocol ➡️](/04-iterable-protocol/README.md)|
 |:--------------|:------:|------------------------------------------------:|
