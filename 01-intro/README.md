@@ -183,7 +183,7 @@ Ryoko Tani has won 16 medals
 Ilias Iliadis has won 15 medals
 ```
 
-In this particular case it's interesting to see that the *item* returned in every iteration is an array with 2 elements containing the **current key** and the **current value**. We used array destructuring here to ma things more concise and readable!
+In this particular case it's interesting to see that the *item* returned in every iteration is an array with 2 elements containing the **current key** and the **current value**. We used array destructuring here to make things more concise and readable!
 
 
 #### `for ... of` with `Object`
@@ -385,7 +385,7 @@ and it produces the following output:
 countdown data: 3 2 1 0
 ```
 
-**Note:** `console.log()` accepts an arbitrary number of arguments and it will print all of them separated by a speace.
+**Note:** `console.log()` accepts an arbitrary number of arguments and it will print all of them separated by a space.
 
 Let's now see how we can use the spread syntax with objects:
 
