@@ -59,6 +59,10 @@ tap.test('zip([], []))', async function (t) {
   t.same(seq, [])
 })
 
+/*
+  Uncomment the following test for testing the advanced version of zip function
+*/
+/*
 tap.test('zip(range(0,10), cycle([\'even\', \'odd\']), [\'zero\', \'one\', \'two\'])', async function (t) {
   const seq = [...zip(range(0, 10), cycle(['even', 'odd']), ['zero', 'one', 'two'])]
   t.same(seq, [
@@ -67,3 +71,4 @@ tap.test('zip(range(0,10), cycle([\'even\', \'odd\']), [\'zero\', \'one\', \'two
     [2, 'even', 'two']
   ])
 })
+*/
