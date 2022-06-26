@@ -106,7 +106,7 @@ console.log(countdown.next())
 console.log(countdown.next())
 ```
 
-This example is perfectly equivalente to the previous one. The important part is that our iterator object exposes a `next()` method that comforms with the **iterator protocol**.
+This example is perfectly equivalent to the previous one. The important part is that our iterator object exposes a `next()` method that conforms with the **iterator protocol**.
 
 
 ## Iterators with generators

@@ -17,7 +17,7 @@
   }
   ```
 
-  Return the names of the athletes who hav ewon at least 3 medals.
+  Return the names of the athletes who have won at least 3 medals.
   For the above example the result should be:
 
   ```

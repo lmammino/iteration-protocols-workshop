@@ -34,7 +34,7 @@ console.log(fakeIterable, isIterable(fakeIterable)) // true 😡
 
 Note that this works... for the most part! The problem is that we are only checking that an object has a property called `Symbol.asyncIterator` and that the property is a function. We are not really checking that the function is really returning an iterator.
 
-Checking that the returned object is actually a _well implemented_ iterator is not easy. We would need to check that the returned object has a `next()` method and that this method returns a object with the shape `{done, value}`. How can we be sure that **every single time** we call `next()` it conforms to this specification (without actually calling `next()`)? And what if suddenly calling `next()` returns `null` or `NaN` or an object with a different shape than the one defined by the protocol?
+Checking that the returned object is actually a _well implemented_ iterator is not easy. We would need to check that the returned object has a `next()` method and that this method returns an object with the shape `{done, value}`. How can we be sure that **every single time** we call `next()` it conforms to this specification (without actually calling `next()`)? And what if suddenly calling `next()` returns `null` or `NaN` or an object with a different shape than the one defined by the protocol?
 
 This is not an easy problem to solve, so I recommend to stick with the light check if you need to distinguish between iterable and non iterable objects in your business logic.
 
@@ -208,7 +208,7 @@ An interesting way to do that in a `for await ... of` loop is to use the [`once`
 
 Now that we know how to use async iterables and handle backpressure, let me tell you that for _complex enough_ pipelines (e.g. when you have more than 2 steps) it's much better (and simpler) to avoid async iterables and use the [`pipeline()`](https://nodejs.org/api/stream.html#streampipelinesource-transforms-destination-callback) function from the `stream/promise` module instead.
 
-Just to illustrate my point, let me show you an example. In the following example we are still counting bytes and savind the data to a file, but this time we also want to compress the data while saving it.
+Just to illustrate my point, let me show you an example. In the following example we are still counting bytes and saving the data to a file, but this time we also want to compress the data while saving it.
 
 
 
@@ -389,7 +389,7 @@ for await (const conn of server) {
 
 Yes, a `for await ... of` to handle incoming requests. At this point of the workshop, you should know that this means that a `server` is an Async Iterator in Deno.
 
-If that sounds somewhat nice, you might be wondering wether we could do the same with Node.js... 
+If that sounds somewhat nice, you might be wondering whether we could do the same with Node.js... 
 
 Well, hold my drink! 🍺
 
@@ -615,7 +615,7 @@ With this approach we are not waiting for the promise representing the current r
 
 Ok, problem solved! 🍻
 
-But... if you want my 2 cents, this is not necessaraly pretty and we have seen that it can be quite dangerous: a careless handling of `async` can easily destroy the performance of you server, so it's probably better to stick with handler functions when it comes to web servers!
+But... if you want my 2 cents, this is not necessarily pretty and we have seen that it can be quite dangerous: a careless handling of `async` can easily destroy the performance of you server, so it's probably better to stick with handler functions when it comes to web servers!
 
 **Let's not be tempted by the patterns of the dinosaur!** 🦕  (Sorry, Deno... 😇)
 
