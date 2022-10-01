@@ -2,7 +2,7 @@
 
 JavaScript offers an interesting feature that can be very useful in the context of iteration: **generator functions**.
 
-We can define a generator function as a function with a super power: a generator function **can be suspended** and then **resumed at a later time**.
+We can define a generator function as a function with a super power: a generator **can be suspended** and then **resumed at a later time**.
 
 Generators are well suited to implement iterators and (little spoiler) they produce objects that implement both the **iterator** and the **iterable** protocol.
 
