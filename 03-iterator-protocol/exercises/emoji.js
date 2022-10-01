@@ -20,6 +20,10 @@
   - You can convert a string into an array of unicode characters with `Array.from(str)`
   - If you use a `for ... of` over a string, every element will be a unicode character
   - A simple way to test if a given unicode character is an emoji is: `char.match(/\p{Emoji}/u) !== null`
+
+  Run the tests with:
+
+  > npm run ex -- 03-iterator-protocol/exercises/emoji.test.js
 */
 
 export function createEmojiIter (text) {

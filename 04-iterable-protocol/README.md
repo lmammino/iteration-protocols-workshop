@@ -242,6 +242,21 @@ Time to put into practice what we learned in this chapter!
 > If you really struggle with this, you can have a look at [`emoji.solution.js`](/04-iterable-protocol/exercises/emoji.solution.js) for a possible solution.
 
 
+> **🏹 Exercise** ([binarytree.js](/04-iterable-protocol/exercises/binarytree.js))
+>
+> You are given a simple implementation of a binary tree data structure. Can you make it iterable?
+>
+> A skeleton of the file is available at `04-iterable-protocol/exercises/binarytree.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 04-iterable-protocol/exercises/binarytree.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`binarytree.solution.js`](/04-iterable-protocol/exercises/binarytree.solution.js) for a possible solution.
+
+
 ## Summary
 
 Here's a summary of what we learned in this chapter:
