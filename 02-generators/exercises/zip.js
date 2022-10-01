@@ -29,6 +29,10 @@
   [8, 'even'],
   [9, 'odd']
   ```
+
+  Run the tests with:
+
+  > npm run ex -- 02-generators/exercises/zip.test.js
 */
 
 /**
