@@ -193,8 +193,8 @@ Let's see how we could implement this cycle utility:
 function * cycle (values) {
   let current = 0
   while (true) {
-    yield values[current % values.length]
-    current += 1
+    yield values[current]
+    current = (current + 1) % values.length
   }
 }
 ```
