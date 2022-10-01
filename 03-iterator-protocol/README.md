@@ -162,8 +162,8 @@ That's all we have to know about iterators and the iterator protocol. Let's exer
 ## Summary
 
  - An **iterator** is an object that allows us to traverse a collection
- - The **iterator protocol** specifies that an object is an iterator if it has a `next()` method that returns an object with the shape `{done, value}`. `done` (a boolean) tells us if the iteration is completed, `value` represent the value from the current iteration.
- - You can write iterators as anonymous object (e.g. returned by a factory function), using classes or using generators.
+ - The **iterator protocol** specifies that an object is an iterator if it has a `next()` method that returns an object with the shape `{done, value}`. `done` (a boolean) tells us if the iteration is completed, `value` represents the value from the current iteration.
+ - You can write an iterator as an anonymous object (e.g. returned by a factory function), using classes or using generators.
 
 
 That's all for now, congratulations on finishing the third chapter! 🎉

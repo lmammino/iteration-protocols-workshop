@@ -263,11 +263,11 @@ Here's a summary of what we learned in this chapter:
 
   - The **iterable protocol** defines what's expected for a JavaScript object to be considered **iterable**. That is an object that holds a collection of data on which you can iterate on sequentially.
   - An object is **iterable** if it implements a **_special_ method called** `Symbol.iterator` which **returns an iterator**.
-  - In other words, an object is an iterable if you can get an iterator from it!
-  - Generator function produces objects that are iterable.
-  - We saw that generators produce objects that are also iterator.
-  - In fact, it is possible to have objects that are both iterator and iterable!
-  - The trick is to create the object as an iterator and the implement a `Symbol.iterator` that returns the object itself (`this`).
+  - In other words, an object is iterable if you can get an iterator from it!
+  - Generator functions produce objects that are iterable.
+  - We saw that generators produce objects that are also iterators.
+  - It is possible to have objects that are both iterator and iterable!
+  - The trick is to create the object as an iterator and to implement a `Symbol.iterator` that returns the object itself (`this`).
 
 That's all for now, congratulations on finishing the fourth chapter! 🎉
 
