@@ -1,5 +1,5 @@
-import { createServer } from 'http'
-import { on } from 'events'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
 
 const server = createServer()
 server.listen(8000)

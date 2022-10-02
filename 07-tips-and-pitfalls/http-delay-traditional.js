@@ -1,5 +1,5 @@
-import { createServer } from 'http'
-import { setTimeout } from 'timers/promises'
+import { createServer } from 'node:http'
+import { setTimeout } from 'node:timers/promises'
 
 const server = createServer(async function (req, res) {
   await setTimeout(1000)

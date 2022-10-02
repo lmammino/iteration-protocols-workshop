@@ -1,6 +1,6 @@
-import { createServer } from 'http'
-import { on } from 'events'
-import { setTimeout } from 'timers/promises'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
+import { setTimeout } from 'node:timers/promises'
 
 const server = createServer()
 server.listen(8000)

@@ -88,7 +88,7 @@ If you run this command you should see:
 332637 bytes read from stdin
 ```
 
-Which is not really _big data_ but should convince you that our stream based implementation works.
+Which is not really _"big data"_ but it should be enough to convince you that our stream-based implementation works.
 
 Ok, but we said that Readable streams are also async iterable objects, so we could write our count bytes example in a much nicer way (if you think that avoiding explicit events is nicer 😜):
 
@@ -130,7 +130,7 @@ That doesn't seem too hard, so let's have a quick look at a possible implementat
 
 ```js
 // copy-stdin.js
-import { createWriteStream } from 'fs'
+import { createWriteStream } from 'node:fs'
 
 const dest = createWriteStream('data.bin')
 
@@ -180,8 +180,8 @@ So here's how we should update our script to handle backpressure correctly:
 
 ```js
 // copy-stdin-backpressure.js
-import { createWriteStream } from 'fs'
-import { once } from 'events'
+import { createWriteStream } from 'node:fs'
+import { once } from 'node:events'
 
 const dest = createWriteStream('data.bin')
 
@@ -214,10 +214,10 @@ Just to illustrate my point, let me show you an example. In the following exampl
 
 ```js
 // copy-stdin-compress.js
-import { Transform } from 'stream'
-import { pipeline } from 'stream/promises'
-import { createWriteStream } from 'fs'
-import { createBrotliCompress } from 'zlib'
+import { Transform } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
+import { createWriteStream } from 'node:fs'
+import { createBrotliCompress } from 'node:zlib'
 
 class CountBytes extends Transform {
   // ... omitted for brevity
@@ -276,7 +276,7 @@ This library allows us to search for all files (and folders) matching a specific
 
 ```js
 // find-js-files.js
-import { on } from 'events'
+import { on } from 'node:events'
 import glob from 'glob' // from npm
 
 const matcher = glob('**/*.js')
@@ -312,7 +312,7 @@ Using `on` and `for await ... of` might look cool and very convenient, but be ca
 In fact, the following code might now behave as you might expect:
 
 ```js
-import { on } from 'events'
+import { on } from 'node:events'
 import glob from 'glob' // from npm
 
 const matcher = glob('**/*.js')
@@ -331,7 +331,7 @@ We could do that as follows:
 
 ```js
 // find-js-files-abort.js
-import { on } from 'events'
+import { on } from 'node:events'
 import glob from 'glob'
 
 const matcher = glob('**/*.js')
@@ -395,8 +395,8 @@ Well, hold my drink! 🍺
 
 ```js
 // http-for-await.js
-import { createServer } from 'http'
-import { on } from 'events'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
 
 const server = createServer()
 server.listen(8000)
@@ -462,9 +462,9 @@ If we are processing request in series that means we won't be able to serve more
 
 ```js
 // http-for-await-delay.js
-import { createServer } from 'http'
-import { on } from 'events'
-import { setTimeout } from 'timers/promises'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
+import { setTimeout } from 'node:timers/promises'
 
 const server = createServer()
 server.listen(8000)
@@ -518,8 +518,8 @@ Just for the sake of comparison, let's see a more traditional implementation of 
 
 ```js
 // http-delay-traditional.js
-import { createServer } from 'http'
-import { setTimeout } from 'timers/promises'
+import { createServer } from 'node:http'
+import { setTimeout } from 'node:timers/promises'
 
 const server = createServer(async function (req, res) {
   await setTimeout(1000)
@@ -578,8 +578,8 @@ The trick is not to use `await` inside the loop:
 
 
 ```js
-import { createServer } from 'http'
-import { on } from 'events'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
 
 const server = createServer()
 server.listen(8000)
@@ -593,9 +593,9 @@ If you really want to do something `async` in the handling logic, you could call
 
 ```js
 // http-for-await-delay-fixed.js
-import { createServer } from 'http'
-import { on } from 'events'
-import { setTimeout } from 'timers/promises'
+import { createServer } from 'node:http'
+import { on } from 'node:events'
+import { setTimeout } from 'node:timers/promises'
 
 const server = createServer()
 server.listen(8000)

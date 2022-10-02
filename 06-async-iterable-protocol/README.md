@@ -34,7 +34,7 @@ OK... Now, let's see an example. Let's convert our asynchronous countdown exampl
 
 ```js
 // countdown-async-iterable.js
-import { setTimeout } from 'timers/promises'
+import { setTimeout } from 'node:timers/promises'
 
 function createAsyncCountdown (start, delay = 1000) {
   let nextVal = start
@@ -89,7 +89,7 @@ We already mentioned a few times that we can use **async generators** to create 
 
 ```js
 // countdown-async-iterable-generator.js
-import { setTimeout } from 'timers/promises'
+import { setTimeout } from 'node:timers/promises'
 
 async function * createAsyncCountdown (start, delay = 1000) {
   for (let i = start; i >= 0; i--) {

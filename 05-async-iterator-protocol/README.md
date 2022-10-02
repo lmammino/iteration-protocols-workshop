@@ -67,7 +67,7 @@ We could stick with our countdown example, except that this time we actually wan
 
 ```js
 // countdown-async-iterator.js
-import { setTimeout } from 'timers/promises'
+import { setTimeout } from 'node:timers/promises'
 
 function createAsyncCountdown (from, delay = 1000) {
   let nextVal = from
@@ -135,7 +135,7 @@ So, let's see how to rewrite our async countdown iterator using a generator:
 
 ```js
 // countdown-async-iterator-generator.js
-import { setTimeout } from 'timers/promises'
+import { setTimeout } from 'node:timers/promises'
 
 async function * createAsyncCountdown (start, delay = 1000) {
   for (let i = start; i >= 0; i--) {

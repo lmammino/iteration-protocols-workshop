@@ -1,4 +1,4 @@
-import { setTimeout } from 'timers/promises'
+import { setTimeout } from 'node:timers/promises'
 
 async function * createAsyncCountdown (start, delay = 1000) {
   for (let i = start; i >= 0; i--) {

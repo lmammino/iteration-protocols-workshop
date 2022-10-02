@@ -1,5 +1,5 @@
-import { createWriteStream } from 'fs'
-import { once } from 'events'
+import { createWriteStream } from 'node:fs'
+import { once } from 'node:events'
 
 const dest = createWriteStream('data.bin')
 

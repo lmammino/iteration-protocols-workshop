@@ -1,7 +1,7 @@
-import { Transform } from 'stream'
-import { pipeline } from 'stream/promises'
-import { createWriteStream } from 'fs'
-import { createBrotliCompress } from 'zlib'
+import { Transform } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
+import { createWriteStream } from 'node:fs'
+import { createBrotliCompress } from 'node:zlib'
 
 class CountBytes extends Transform {
   constructor (options) {

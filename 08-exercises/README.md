@@ -123,7 +123,7 @@ Can we implement the same `map()` utility as in the previous exercise, but this 
 We want something that could allow us to do this:
 
 ```js
-import { createReadStream } from 'fs'
+import { createReadStream } from 'node:fs'
 
 const asyncMap = async function * (stream, transform) {
   // TODO
@@ -159,7 +159,7 @@ Well, if you think that's a lot of code, try to implement a simplified version t
 Let's say you want to listen to events, but if they happen too often you should ignore them. This is called **debouncing** and it something common in the frontend world, but it might also be useful on the backend. For instance, let's say that we have a `sensor` object emitting readings frequently (once every 100ms) and that we only want to log them at most once per second:
 
 ```js
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'node:events'
 
 const sensor = new EventEmitter()
 setInterval(() => sensor.emit('reading', Math.random()), 100)
