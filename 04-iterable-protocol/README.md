@@ -257,6 +257,21 @@ Time to put into practice what we learned in this chapter!
 > If you really struggle with this, you can have a look at [`binarytree.solution.js`](/04-iterable-protocol/exercises/binarytree.solution.js) for a possible solution.
 
 
+> **🏹 Exercise** ([entries.js](/04-iterable-protocol/exercises/entries.js))
+>
+> Let's re-implement `Object.entries` by ourselves!
+>
+> A skeleton of the file is available at `04-iterable-protocol/exercises/entries.js`.
+>
+> You can edit the file and run an interactive test session to validate your implementation with:
+>
+> ```bash
+> npm run ex -- 04-iterable-protocol/exercises/entries.test.js
+> ```
+>
+> If you really struggle with this, you can have a look at [`entries.solution.js`](/04-iterable-protocol/exercises/entries.solution.js) for a possible solution.
+
+
 ## Summary
 
 Here's a summary of what we learned in this chapter:
