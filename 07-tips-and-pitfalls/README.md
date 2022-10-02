@@ -631,7 +631,7 @@ In this chapter we learned a few interesting tips, tricks and common gotchas! He
 
   - You can check if an object is an iterable by checking `typeof obj[Symbol.iterator] === 'function'`
   - Similarly you can check if an object is an **async** iterable with `typeof obj[Symbol.asyncIterator] === 'function'`
-  - In both cases there's no guarantee that the iterable protocol is implemented correctly (the function might not return an iterator 😥)
+  - In both cases, there's no guarantee that the iterable protocol is implemented correctly (the function might not return an iterator 😥)
   - Node.js Readable streams are also async iterable objects, so you could use `for await ... of` to consume the data in chunks
   - If you do that and you end up writing data somewhere else, you'll need to handle backpressure yourself. It might be better to use `pipeline()` instead.
   - You can convert Node.js event emitters to async iterable objects by using the `on` function from the module `events`.

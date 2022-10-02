@@ -32,9 +32,9 @@ lines.next() // { done: true, value: undefined }
 
 ### 08.02 Incremental find
 
-Create an iterable object that allows you to search an occurence of a certain keyword in a given text. The search should be lazy and give you one occurrence per every iteration. Every occurrence should be represented by the line number and the initial position of the match in that line (column index).
+Create an iterable object that allows you to search an occurrence of a certain keyword in a given text. The search should be lazy and give you one occurrence per every iteration. Every occurrence should be represented by the line number and the initial position of the match in that line (column index).
 
-For instance if you have the follwing text:
+For instance, if you have the following text:
 
 ```js
 const text = `Were you born to resist or be abused
