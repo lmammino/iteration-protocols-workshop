@@ -28,14 +28,15 @@
   "homepage": "https://github.com/lmammino/iteration-protocols-workshop#readme",
   "devDependencies": {
     "axios": "^0.27.2",
-    "eslint": "^8.14.0",
+    "eslint": "^8.24.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "nock": "^13.2.4",
-    "node-fetch": "^3.2.4",
-    "tap": "^16.1.0"
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
+    "nock": "^13.2.9",
+    "node-fetch": "^3.2.10",
+    "tap": "^16.3.0",
+    "undici": "^5.10.0"
   },
   "dependencies": {
     "glob": "^8.0.3"

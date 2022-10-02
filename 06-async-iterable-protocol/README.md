@@ -8,7 +8,7 @@ for await (const currentPage of somePaginatedDataset) {
 }
 ```
 
-Which is a very convenient way to implement an asynchronous iteration, like, for instance, going over a paginated dataset.
+This is a very convenient way to implement an asynchronous iteration, like, for instance, going over a paginated dataset.
 
 So, without further ado, let's see how we can create async iterables.
 
@@ -26,7 +26,7 @@ The following table summarises the differences between the 2 iterable protocols:
 | **method**  | `Symbol.iterator` | `Symbol.asyncIterator` |
 | **returns** | an iterator       | an async iterator      |
 
-Let's take a moment to remember that an iterable is an object that holds or represents a collection. We can iterate over that collection by asking the iterable to give us an iterator. For synchronous iterables we need to call `Symbol.iterator` to get a synchronous iterator, while for asynchronous iterables we need to call `Symbol.asyncIterator` get an async iterator.
+Let's take a moment to remember that an iterable is an object that holds or represents a collection. We can iterate over that collection by asking the iterable to give us an iterator. For synchronous iterables we need to call `Symbol.iterator` to get a synchronous iterator, while for asynchronous iterables we need to call `Symbol.asyncIterator` to get an async iterator.
 
 Makes sense, right? 🤗
 
@@ -157,9 +157,9 @@ Let's review what we learned in this chapter:
   - Async iterables are a great way to abstract paginated data that is available asynchronously or similar operations like pulling jobs from a remote queue.
   - A small spoiler, async iterables can also be used with Node.js streams...
 
-That's all for now, congratulations on finishing the sixt chapter! 🎉
+That's all for now, congratulations on finishing the sixth chapter! 🎉
 
-Give yourself a pat to the back, take a little break and get ready to explore some interesting [Tips and Pitfalls](/07-tips-and-pitfalls/README.md).
+Pat yourself on the back, take a little break, and get ready to explore some interesting [Tips and Pitfalls](/07-tips-and-pitfalls/README.md).
 
 ---
 

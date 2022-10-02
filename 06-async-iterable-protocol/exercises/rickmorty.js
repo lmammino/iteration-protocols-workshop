@@ -28,7 +28,11 @@
 
   An array with a maximum of 20 character names.
 
-  You can use `axios` or `node-fetch`, both are already available in your `node_modules`!
+  You can use `axios`, `node-fetch` or `undici`, they are all already available in your `node_modules`!
+
+  Run the tests with:
+
+  npm run ex -- 06-async-iterable-protocol/exercises/rickmorty.test.js
 */
 
 export default function createCharactersPaginator () {

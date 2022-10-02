@@ -185,9 +185,9 @@ That's what we learned in this chapter:
   - Async iterators are the asynchronous counterpart of iterators.
   - They are useful to iterate over data that becomes available asynchronously (e.g. coming from a database or a REST API).
   - A good example is a paginated API, we could build an async iterator that gives a new page for every iteration.
-  - An object is async iterator if it has a `next()` method which returns a `Promise` that resolves to an object with the shape: `{done, value}`.
-  - The only difference with the iterator protocol is that this time `next()` returns a promise.
-  - When we call next we need make sure we `await` the returned promise.
+  - An object is an async iterator if it has a `next()` method which returns a `Promise` that resolves to an object with the shape: `{done, value}`.
+  - The main difference with the iterator protocol is that this time `next()` returns a promise.
+  - When we call next we need to make sure we `await` the returned promise.
 
 
 That's all for now, congratulations on finishing the fifth chapter! 🎉
