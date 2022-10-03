@@ -26,7 +26,7 @@
 
   Run the tests with:
 
-  > npm run ex -- 02-generators/exercises/zip.test.js
+  > npm run ex -- 02-generators/exercises/take.test.js
 */
 
 /**
